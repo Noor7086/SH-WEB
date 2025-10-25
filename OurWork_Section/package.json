@@ -1,0 +1,31 @@
+{
+  "name": "our-work-section",
+  "version": "1.0.0",
+  "description": "Complete Our Work section with portfolio gallery, animations, and responsive design",
+  "main": "components/OurWork.jsx",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "framer-motion": "^10.16.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.3",
+    "vite": "^4.4.5"
+  },
+  "keywords": [
+    "react",
+    "portfolio",
+    "gallery",
+    "framer-motion",
+    "responsive",
+    "our-work",
+    "web-development"
+  ],
+  "author": "Web Developers Inc",
+  "license": "MIT"
+}

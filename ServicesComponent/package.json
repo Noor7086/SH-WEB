@@ -1,0 +1,25 @@
+{
+  "name": "services-component",
+  "version": "1.0.0",
+  "description": "Standalone Services component with all dependencies",
+  "main": "Services.jsx",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.9.0",
+    "react-icons": "^4.12.0"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "keywords": [
+    "react",
+    "component",
+    "services",
+    "bootstrap",
+    "ui"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
+
