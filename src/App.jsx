@@ -13,7 +13,6 @@ import Footer from './components/Footer';
 // Lazy load heavy components for better performance
 const About = lazy(() => import('./components/About'));
 const Services = lazy(() => import('./components/Services'));
-const Team = lazy(() => import('./components/Team'));
 const Projects = lazy(() => import('./components/Projects'));
 const OurWork = lazy(() => import('./components/OurWork'));
 const Achievements = lazy(() => import('./components/Achievements'));
@@ -65,7 +64,6 @@ function App() {
               <Hero />
               <Suspense fallback={<LoadingFallback />}>
                 <About />
-                <Team />
                 <Services />
                 <Projects />
                 <OurWork isHomePage={true} />

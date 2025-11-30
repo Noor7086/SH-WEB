@@ -129,12 +129,13 @@ const NavigationBar = () => {
         <Navbar.Toggle 
           aria-controls="basic-navbar-nav" 
           aria-expanded={isOpen}
-          className="border-0"
+          className="border-0 navbar-toggler-right"
           style={{ 
             color: scrolled ? '#333' : 'white',
             border: 'none !important',
             outline: 'none !important',
-            boxShadow: 'none !important'
+            boxShadow: 'none !important',
+            marginLeft: 'auto'
           }}
         >
           {isOpen ? <FaTimes style={{ color: scrolled ? '#333' : 'white', fontSize: '1.5rem' }} /> : <FaBars style={{ color: scrolled ? '#333' : 'white', fontSize: '1.5rem' }} />}
@@ -145,7 +146,6 @@ const NavigationBar = () => {
             {[
               { name: 'Home', id: 'home' },
               { name: 'About Us', id: 'about' },
-              { name: 'Team', id: 'team' },
               { name: 'Services', id: 'services' },
               { name: 'Projects', id: 'projects' },
               { name: 'Our Work', id: 'ourwork' },
@@ -319,7 +319,8 @@ const NavigationBar = () => {
             font-size: 0.95rem !important;
           }
           
-          .navbar-toggler {
+          .navbar-toggler,
+          .navbar-toggler-right {
             padding: 0.05rem 0.2rem !important;
             margin: 0 !important;
             margin-left: auto !important;
@@ -330,6 +331,15 @@ const NavigationBar = () => {
             line-height: 1 !important;
             align-self: center !important;
             flex-shrink: 0 !important;
+            position: absolute !important;
+            right: 15px !important;
+          }
+          
+          .navbar > .container {
+            position: relative !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
           }
           
           .navbar-collapse {
