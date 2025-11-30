@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import emailjs from '@emailjs/browser';
 import { 
   FaEnvelope, 
   FaPhone, 
-  FaMapMarkerAlt, 
-  FaClock, 
   FaLinkedin, 
   FaTwitter, 
   FaFacebook, 
@@ -39,8 +38,28 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID';
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID';
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
+
+      // Prepare template parameters
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        phone: formData.phone || 'Not provided',
+        company: formData.company || 'Not provided',
+        project_type: formData.projectType || 'General Inquiry',
+        budget: formData.budget || 'Not specified',
+        message: formData.message,
+        to_email: 'fahadshafiq77@gmail.com',
+        subject: `New Contact Form Submission - ${formData.projectType || 'General Inquiry'}`
+      };
+
+      // Send email using EmailJS with SMTP
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      
+      // Show success message
       setIsSubmitting(false);
       setSubmitStatus('success');
       setFormData({
@@ -55,33 +74,26 @@ const Contact = () => {
       
       // Reset status after 5 seconds
       setTimeout(() => setSubmitStatus(null), 5000);
-    }, 2000);
+    } catch (error) {
+      console.error('Error sending email:', error);
+      setIsSubmitting(false);
+      setSubmitStatus('error');
+      setTimeout(() => setSubmitStatus(null), 5000);
+    }
   };
 
   const contactInfo = [
     {
       icon: <FaEnvelope style={{ color: 'white' }} />,
       title: "Email Us",
-      details: ["info@techhouse.com", "support@techhouse.com"],
-      action: "mailto:info@techhouse.com"
+      details: ["fahadshafiq77@gmail.com"],
+      action: "mailto:fahadshafiq77@gmail.com"
     },
     {
       icon: <FaPhone style={{ color: 'white' }} />,
       title: "Call Us",
-      details: ["+1 (555) 123-4567", "+1 (555) 987-6543"],
-      action: "tel:+15551234567"
-    },
-    {
-      icon: <FaMapMarkerAlt style={{ color: 'white' }} />,
-      title: "Visit Us",
-      details: ["123 Tech Street", "Silicon Valley, CA 94025"],
-      action: "https://maps.google.com"
-    },
-    {
-      icon: <FaClock style={{ color: 'white' }} />,
-      title: "Business Hours",
-      details: ["Mon-Fri: 9:00 AM - 6:00 PM", "Sat: 10:00 AM - 4:00 PM"],
-      action: null
+      details: ["03332736688"],
+      action: "tel:+923332736688"
     }
   ];
 
@@ -94,14 +106,13 @@ const Contact = () => {
 
   return (
     <section id="contact" style={{
-      background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
-      minHeight: '100vh',
+      background: 'transparent',
       display: 'flex',
       alignItems: 'center',
       position: 'relative',
       overflow: 'hidden',
-      paddingTop: '80px',
-      paddingBottom: '80px'
+      paddingTop: '60px',
+      paddingBottom: '60px'
     }}>
       {/* Premium Background Elements */}
       <div className="position-absolute" style={{
@@ -134,10 +145,10 @@ const Contact = () => {
         animation: 'float 7s ease-in-out infinite'
       }}></div>
 
-      <Container style={{ position: 'relative', zIndex: 2 }}>
-        <Row className="text-center mb-5">
-          <Col lg={10} className="mx-auto" data-aos="fade-up">
-            <div style={{
+      <Container style={{ position: 'relative', zIndex: 2, maxWidth: '1400px' }}>
+        <Row className="text-center mb-4">
+          <Col lg={10} md={11} sm={12} className="mx-auto" data-aos="fade-up">
+            <div className="premium-badge" style={{
               display: 'inline-block',
               padding: '12px 24px',
               background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -145,7 +156,7 @@ const Contact = () => {
               boxShadow: '0 8px 25px rgba(102, 126, 234, 0.3)',
               border: '2px solid rgba(255,255,255,0.2)',
               backdropFilter: 'blur(10px)',
-              marginBottom: '20px'
+              marginBottom: '15px'
             }}>
               <FaRocket style={{ 
                 color: 'white', 
@@ -161,20 +172,27 @@ const Contact = () => {
               </span>
             </div>
             
-            <h2 className="display-4 fw-bold mb-4" style={{
-              background: 'linear-gradient(135deg, #1e293b 0%, #475569 50%, #667eea 100%)',
+            <h2 style={{
+              fontSize: '3rem',
+              fontWeight: '800',
+              marginBottom: '1rem',
+              background: 'linear-gradient(135deg, #1a1a2e 0%, #667eea 50%, #764ba2 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
+              backgroundClip: 'text',
+              lineHeight: '1.2'
             }}>
               Ready to Start Your Project?
             </h2>
             
-            <p className="fs-4 text-muted" style={{
-              maxWidth: '600px',
-              margin: '0 auto',
+            <p style={{
+              fontSize: '1.25rem',
+              color: '#6c757d',
               lineHeight: '1.6',
-              fontWeight: '400'
+              maxWidth: '550px',
+              margin: '0 auto',
+              fontWeight: '400',
+              padding: '0 15px'
             }}>
               Let's discuss your project requirements and how we can help you 
               achieve your business goals with our innovative solutions.
@@ -182,18 +200,19 @@ const Contact = () => {
           </Col>
         </Row>
 
-        <Row className="g-5">
+        <Row className="g-4">
           {/* Contact Form */}
-          <Col lg={8} data-aos="fade-right">
-            <div style={{
+          <Col lg={8} md={12} data-aos="fade-right">
+            <div className="contact-form-container" style={{
               background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%)',
               borderRadius: '30px',
-              padding: '50px 40px',
+              padding: '35px 30px',
               border: '2px solid rgba(255,255,255,0.3)',
               backdropFilter: 'blur(25px)',
               boxShadow: '0 25px 80px rgba(0,0,0,0.1)',
               position: 'relative',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              maxWidth: '100%'
             }}>
               {/* Background Pattern */}
               <div className="position-absolute" style={{
@@ -206,19 +225,19 @@ const Contact = () => {
               }}></div>
               
               <div className="position-relative" style={{ zIndex: 2 }}>
-                <h3 className="fw-bold mb-4" style={{
+                <h3 className="fw-bold mb-3 text-center" style={{
                   background: 'linear-gradient(135deg, #1e293b 0%, #667eea 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
-                  fontSize: '2rem'
+                  fontSize: '2.2rem'
                 }}>
                   Send Us a Message
                 </h3>
                 
                 {submitStatus === 'success' && (
                   <div className="mb-4" style={{
-                    padding: '15px 20px',
+                    padding: '12px 18px',
                     background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
                     borderRadius: '15px',
                     color: 'white',
@@ -229,11 +248,24 @@ const Contact = () => {
                     Thank you! Your message has been sent successfully. We'll get back to you within 24 hours.
                   </div>
                 )}
+                
+                {submitStatus === 'error' && (
+                  <div className="mb-4" style={{
+                    padding: '12px 18px',
+                    background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                    borderRadius: '15px',
+                    color: 'white',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    backdropFilter: 'blur(10px)'
+                  }}>
+                    There was an error. Please try again or email us directly at fahadshafiq77@gmail.com
+                  </div>
+                )}
 
                 <Form onSubmit={handleSubmit}>
                   <Row>
                     <Col md={6}>
-                      <Form.Group className="mb-4">
+                      <Form.Group className="mb-3">
                         <Form.Label className="fw-semibold mb-2" style={{ color: '#1e293b' }}>Full Name *</Form.Label>
                         <Form.Control
                           type="text"
@@ -243,7 +275,7 @@ const Contact = () => {
                           required
                           placeholder="Enter your full name"
                           style={{
-                            padding: '15px 20px',
+                            padding: '12px 18px',
                             borderRadius: '15px',
                             border: '2px solid rgba(102, 126, 234, 0.2)',
                             fontSize: '1rem',
@@ -263,7 +295,7 @@ const Contact = () => {
                       </Form.Group>
                     </Col>
                     <Col md={6}>
-                      <Form.Group className="mb-4">
+                      <Form.Group className="mb-3">
                         <Form.Label className="fw-semibold mb-2" style={{ color: '#1e293b' }}>Email Address *</Form.Label>
                         <Form.Control
                           type="email"
@@ -273,7 +305,7 @@ const Contact = () => {
                           required
                           placeholder="Enter your email"
                           style={{
-                            padding: '15px 20px',
+                            padding: '12px 18px',
                             borderRadius: '15px',
                             border: '2px solid rgba(102, 126, 234, 0.2)',
                             fontSize: '1rem',
@@ -296,7 +328,7 @@ const Contact = () => {
 
                   <Row>
                     <Col md={6}>
-                      <Form.Group className="mb-4">
+                      <Form.Group className="mb-3">
                         <Form.Label className="fw-semibold mb-2" style={{ color: '#1e293b' }}>Phone Number</Form.Label>
                         <Form.Control
                           type="tel"
@@ -305,7 +337,7 @@ const Contact = () => {
                           onChange={handleInputChange}
                           placeholder="Enter your phone number"
                           style={{
-                            padding: '15px 20px',
+                            padding: '12px 18px',
                             borderRadius: '15px',
                             border: '2px solid rgba(102, 126, 234, 0.2)',
                             fontSize: '1rem',
@@ -325,7 +357,7 @@ const Contact = () => {
                       </Form.Group>
                     </Col>
                     <Col md={6}>
-                      <Form.Group className="mb-4">
+                      <Form.Group className="mb-3">
                         <Form.Label className="fw-semibold mb-2" style={{ color: '#1e293b' }}>Company Name</Form.Label>
                         <Form.Control
                           type="text"
@@ -334,7 +366,7 @@ const Contact = () => {
                           onChange={handleInputChange}
                           placeholder="Enter your company name"
                           style={{
-                            padding: '15px 20px',
+                            padding: '12px 18px',
                             borderRadius: '15px',
                             border: '2px solid rgba(102, 126, 234, 0.2)',
                             fontSize: '1rem',
@@ -357,7 +389,7 @@ const Contact = () => {
 
                   <Row>
                     <Col md={6}>
-                      <Form.Group className="mb-4">
+                      <Form.Group className="mb-3">
                         <Form.Label className="fw-semibold mb-2" style={{ color: '#1e293b' }}>Project Type *</Form.Label>
                         <Form.Select
                           name="projectType"
@@ -365,7 +397,7 @@ const Contact = () => {
                           onChange={handleInputChange}
                           required
                           style={{
-                            padding: '15px 20px',
+                            padding: '12px 18px',
                             borderRadius: '15px',
                             border: '2px solid rgba(102, 126, 234, 0.2)',
                             fontSize: '1rem',
@@ -394,14 +426,16 @@ const Contact = () => {
                       </Form.Group>
                     </Col>
                     <Col md={6}>
-                      <Form.Group className="mb-4">
+                      <Form.Group className="mb-3">
                         <Form.Label className="fw-semibold mb-2" style={{ color: '#1e293b' }}>Budget Range</Form.Label>
-                        <Form.Select
+                        <Form.Control
+                          type="text"
                           name="budget"
                           value={formData.budget}
                           onChange={handleInputChange}
+                          placeholder="Enter your budget"
                           style={{
-                            padding: '15px 20px',
+                            padding: '12px 18px',
                             borderRadius: '15px',
                             border: '2px solid rgba(102, 126, 234, 0.2)',
                             fontSize: '1rem',
@@ -417,19 +451,12 @@ const Contact = () => {
                             e.target.style.borderColor = 'rgba(102, 126, 234, 0.2)';
                             e.target.style.boxShadow = 'none';
                           }}
-                        >
-                          <option value="">Select budget range</option>
-                          <option value="under-10k">Under $10,000</option>
-                          <option value="10k-25k">$10,000 - $25,000</option>
-                          <option value="25k-50k">$25,000 - $50,000</option>
-                          <option value="50k-100k">$50,000 - $100,000</option>
-                          <option value="over-100k">Over $100,000</option>
-                        </Form.Select>
+                        />
                       </Form.Group>
                     </Col>
                   </Row>
 
-                  <Form.Group className="mb-4">
+                  <Form.Group className="mb-3">
                     <Form.Label className="fw-semibold mb-2" style={{ color: '#1e293b' }}>Project Details *</Form.Label>
                     <Form.Control
                       as="textarea"
@@ -440,7 +467,7 @@ const Contact = () => {
                       required
                       placeholder="Tell us about your project requirements, goals, and any specific features you need..."
                       style={{
-                        padding: '15px 20px',
+                        padding: '12px 18px',
                         borderRadius: '15px',
                         border: '2px solid rgba(102, 126, 234, 0.2)',
                         fontSize: '1rem',
@@ -463,7 +490,7 @@ const Contact = () => {
                   <Button 
                     type="submit" 
                     size="lg" 
-                    className="fw-bold px-5 py-3"
+                    className="fw-bold px-3 py-3 d-block mx-auto"
                     disabled={isSubmitting}
                     style={{
                       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -472,7 +499,9 @@ const Contact = () => {
                       boxShadow: '0 12px 35px rgba(102, 126, 234, 0.4)',
                       fontSize: '1.1rem',
                       letterSpacing: '0.5px',
-                      transition: 'all 0.3s ease'
+                      transition: 'all 0.3s ease',
+                      display: 'block',
+                      margin: '0 auto'
                     }}
                     onMouseEnter={(e) => {
                       e.target.style.transform = 'translateY(-3px) scale(1.05)';
@@ -501,9 +530,9 @@ const Contact = () => {
           </Col>
 
           {/* Contact Information */}
-          <Col lg={4} data-aos="fade-left">
-            <div className="mb-5">
-              <h3 className="fw-bold mb-4" style={{
+          <Col lg={4} md={12} data-aos="fade-left">
+            <div className="mb-4 contact-info-section" style={{ maxWidth: '100%' }}>
+              <h3 className="fw-bold mb-3 text-center contact-info-heading" style={{
                 background: 'linear-gradient(135deg, #1e293b 0%, #667eea 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -513,10 +542,10 @@ const Contact = () => {
                 Contact Information
               </h3>
               {contactInfo.map((info, index) => (
-                <div key={index} className="mb-4" style={{
+                <div key={index} className="mb-3 contact-info-card" style={{
                   background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%)',
                   borderRadius: '20px',
-                  padding: '25px 20px',
+                  padding: '20px 18px',
                   border: '2px solid rgba(255,255,255,0.3)',
                   backdropFilter: 'blur(20px)',
                   boxShadow: '0 15px 40px rgba(0,0,0,0.08)',
@@ -540,8 +569,8 @@ const Contact = () => {
                     window.open(info.action, '_blank');
                   }
                 }}>
-                  <div className="d-flex align-items-center">
-                    <div className="me-3" style={{
+                  <div className="d-flex align-items-center contact-info-item">
+                    <div className="me-3 contact-info-icon" style={{
                       width: '50px',
                       height: '50px',
                       borderRadius: '15px',
@@ -555,10 +584,10 @@ const Contact = () => {
                         style: { color: 'white', fontSize: '1.2rem' }
                       })}
                     </div>
-                    <div>
-                      <h6 className="fw-bold mb-2" style={{ color: '#1e293b', fontSize: '1.1rem' }}>{info.title}</h6>
+                    <div className="contact-info-content">
+                      <h6 className="fw-bold mb-2 contact-info-title" style={{ color: '#1e293b', fontSize: '1.1rem' }}>{info.title}</h6>
                       {info.details.map((detail, detailIndex) => (
-                        <p key={detailIndex} className="mb-1 text-muted" style={{ fontSize: '0.95rem' }}>{detail}</p>
+                        <p key={detailIndex} className="mb-1 text-muted contact-info-detail" style={{ fontSize: '0.95rem' }}>{detail}</p>
                       ))}
                     </div>
                   </div>
@@ -567,8 +596,8 @@ const Contact = () => {
             </div>
 
             {/* Social Links */}
-            <div className="mb-5">
-              <h5 className="fw-bold mb-4" style={{
+            <div className="mb-4 follow-us-section">
+              <h5 className="fw-bold mb-3 text-center follow-us-heading" style={{
                 background: 'linear-gradient(135deg, #1e293b 0%, #667eea 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -577,12 +606,12 @@ const Contact = () => {
               }}>
                 Follow Us
               </h5>
-              <div className="d-flex gap-3">
+              <div className="d-flex gap-3 justify-content-start social-links-container">
                 {socialLinks.map((social, index) => (
                   <a 
                     key={index} 
                     href={social.url} 
-                    className="text-decoration-none"
+                    className="text-decoration-none social-link-item"
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
@@ -607,6 +636,7 @@ const Contact = () => {
                     }}
                   >
                     {React.cloneElement(social.icon, {
+                      className: 'social-icon',
                       style: { fontSize: '1.2rem' }
                     })}
                   </a>
@@ -616,188 +646,343 @@ const Contact = () => {
 
           </Col>
         </Row>
-
-        {/* Map Section */}
-        <Row className="mt-5" data-aos="fade-up">
-          <Col lg={12}>
-            <div style={{
-              background: 'transparent',
-              borderRadius: '35px',
-              padding: '40px 30px',
-              border: 'none',
-              backdropFilter: 'none',
-              boxShadow: 'none',
-              position: 'relative',
-              overflow: 'hidden'
-            }}>
-              {/* Background Pattern */}
-              <div className="position-absolute" style={{
-                top: '-60px',
-                right: '-60px',
-                width: '250px',
-                height: '250px',
-                background: 'radial-gradient(circle, rgba(102,126,234,0.08) 0%, transparent 70%)',
-                borderRadius: '50%'
-              }}></div>
-              
-              <div className="position-absolute" style={{
-                bottom: '-40px',
-                left: '-40px',
-                width: '180px',
-                height: '180px',
-                background: 'transparent',
-                borderRadius: '50%'
-              }}></div>
-              
-              <div className="position-absolute" style={{
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: '300px',
-                height: '300px',
-                background: 'radial-gradient(circle, rgba(102,126,234,0.03) 0%, transparent 70%)',
-                borderRadius: '50%'
-              }}></div>
-              
-              <div className="position-relative" style={{ zIndex: 2 }}>
-                <div className="text-center mb-4">
-                  <span className="badge px-4 py-3 fw-bold mb-3" style={{
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    color: 'white',
-                    fontSize: '0.9rem'
-                  }}>
-                    <span style={{ color: 'white' }}>📍</span> Our Location
-                  </span>
-                  <h2 className="display-5 fw-bold mb-4">
-                    Visit Our State-of-the-Art Office in 
-                    <span style={{ 
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text'
-                    }}> Silicon Valley</span>
-                  </h2>
-                  <p className="text-muted mb-0" style={{
-                    fontSize: '1.1rem',
-                    maxWidth: '600px',
-                    margin: '0 auto',
-                    lineHeight: '1.6'
-                  }}>
-                    We're located in the heart of the tech industry.
-                  </p>
-                </div>
-                
-                <div className="ratio ratio-21x9" style={{
-                  borderRadius: '25px',
-                  overflow: 'hidden',
-                  boxShadow: '0 8px 25px rgba(0,0,0,0.1)',
-                  border: 'none'
-                }}>
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3168.639110441012!2d-122.08374688469225!3d37.42199997982525!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fba02425dad8f%3A0x6c296c66619367e0!2sGoogleplex!5e0!3m2!1sen!2sus!4v1234567890"
-                    title="Office Location"
-                    allowFullScreen=""
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    style={{
-                      border: 'none',
-                      borderRadius: '22px',
-                      filter: 'brightness(1.1) contrast(1.1)'
-                    }}
-                  ></iframe>
-                </div>
-                
-                {/* Map Info Cards */}
-                <div className="row mt-4 g-3">
-                  <div className="col-md-4">
-                    <div style={{
-                      background: 'white',
-                      borderRadius: '15px',
-                      padding: '20px',
-                      border: '1px solid rgba(0,0,0,0.1)',
-                      textAlign: 'center'
-                    }}>
-                      <h6 className="fw-bold mb-2" style={{
-                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text',
-                        fontSize: '1rem'
-                      }}>
-                        🚗 Parking Available
-                      </h6>
-                      <p className="mb-0 text-muted small">Free parking for visitors</p>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div style={{
-                      background: 'white',
-                      borderRadius: '15px',
-                      padding: '20px',
-                      border: '1px solid rgba(0,0,0,0.1)',
-                      textAlign: 'center'
-                    }}>
-                      <h6 className="fw-bold mb-2" style={{
-                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text',
-                        fontSize: '1rem'
-                      }}>
-                        🚇 Public Transport
-                      </h6>
-                      <p className="mb-0 text-muted small">Easy access via metro</p>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div style={{
-                      background: 'white',
-                      borderRadius: '15px',
-                      padding: '20px',
-                      border: '1px solid rgba(0,0,0,0.1)',
-                      textAlign: 'center'
-                    }}>
-                      <h6 className="fw-bold mb-2" style={{
-                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text',
-                        fontSize: '1rem'
-                      }}>
-                        ☕ Amenities
-                      </h6>
-                      <p className="mb-0 text-muted small">Café & meeting rooms</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Col>
-        </Row>
       </Container>
 
-      <style jsx>{`
+      <style>{`
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-20px); }
         }
         
+        /* Container Width Reduction */
+        @media (min-width: 1200px) {
+          .container {
+            max-width: 1400px !important;
+          }
+        }
+        
+        @media (min-width: 992px) and (max-width: 1199px) {
+          .container {
+            max-width: 1200px !important;
+          }
+        }
+        
         /* Mobile Responsive Styles */
+        @media (max-width: 992px) {
+          .container {
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+          }
+        }
+        
         @media (max-width: 768px) {
           #contact {
             min-height: auto !important;
-            padding: 3rem 0 !important;
+            padding: 1.5rem 0 !important;
           }
           
-          .contact-form-container {
-            padding: 30px 20px !important;
-            border-radius: 20px !important;
+          .container {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+          }
+          
+          /* Center Follow Us Social Links on Mobile */
+          .social-links-container {
+            justify-content: center !important;
+            gap: 12px !important;
+          }
+          
+          /* Follow Us Mobile Styles */
+          .follow-us-heading {
+            font-size: 1.2rem !important;
+            margin-bottom: 1rem !important;
+          }
+          
+          .social-link-item {
+            width: 45px !important;
+            height: 45px !important;
+            border-radius: 12px !important;
+          }
+          
+          .social-link-item .social-icon {
+            font-size: 1.1rem !important;
+          }
+          
+          /* Contact Information Mobile Styles */
+          .contact-info-heading {
+            font-size: 1.5rem !important;
+            margin-bottom: 1rem !important;
           }
           
           .contact-info-card {
+            padding: 14px 12px !important;
+            border-radius: 18px !important;
+            margin-bottom: 10px !important;
+          }
+          
+          .contact-info-icon {
+            width: 45px !important;
+            height: 45px !important;
+            min-width: 45px !important;
+            border-radius: 12px !important;
+          }
+          
+          .contact-info-icon svg {
+            font-size: 1.1rem !important;
+          }
+          
+          .contact-info-title {
+            font-size: 1rem !important;
+            margin-bottom: 8px !important;
+          }
+          
+          .contact-info-detail {
+            font-size: 0.9rem !important;
+            line-height: 1.5 !important;
+          }
+          
+          .contact-form-container {
             padding: 20px 15px !important;
+            border-radius: 20px !important;
+            max-width: 100% !important;
+            margin: 0 auto !important;
+          }
+          
+          .contact-form-container input,
+          .contact-form-container select,
+          .contact-form-container textarea {
+            padding: 10px 12px !important;
+            border-radius: 12px !important;
+            font-size: 0.95rem !important;
+          }
+          
+          .map-section-container {
+            padding: 12px !important;
+          }
+          
+          .contact-form-container button[type="submit"] {
+            padding: 10px 14px !important;
+            font-size: 0.95rem !important;
+            border-radius: 18px !important;
+            width: 100% !important;
+            max-width: 320px !important;
+          }
+          
+          /* Mobile Heading Sizes */
+          h2 {
+            font-size: 1.8rem !important;
+            padding: 0 10px !important;
+          }
+          
+          h3 {
+            font-size: 1.3rem !important;
+          }
+          
+          .lead {
+            font-size: 1rem !important;
+          }
+          
+          p {
+            padding: 0 10px !important;
+          }
+          
+          /* Our Location Badge Mobile */
+          .location-badge {
+            padding: 4px 8px !important;
+          }
+          
+          .location-badge .location-icon {
+            font-size: 0.8rem !important;
+            margin-right: 6px !important;
+          }
+          
+          .location-badge .location-text {
+            font-size: 0.7rem !important;
+          }
+          
+          /* Our Location Heading Mobile */
+          .location-heading {
+            font-size: 1.5rem !important;
+            line-height: 1.2 !important;
+          }
+          
+          h2.location-heading {
+            font-size: 1.5rem !important;
+            line-height: 1.2 !important;
+          }
+          
+          /* Override inline style for mobile */
+          h2.location-heading[style] {
+            font-size: 1.5rem !important;
+            line-height: 1.2 !important;
+          }
+          
+          /* Mobile Badge Styles */
+          .premium-badge {
+            padding: 6px 12px !important;
+            font-size: 0.7rem !important;
+            margin-bottom: 12px !important;
+          }
+          
+          /* Mobile fw-bold mb-4 Elements */
+          .fw-bold.mb-4 {
+            margin-bottom: 24px !important;
+          }
+        }
+        
+        @media (max-width: 576px) {
+          /* Small Mobile Spacing Reduction */
+          #contact {
+            padding: 1.5rem 0 !important;
+          }
+          
+          .container {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+          }
+          
+          .contact-form-container {
+            padding: 18px 12px !important;
+            border-radius: 18px !important;
+            max-width: 100% !important;
+          }
+          
+          .map-section-container {
+            padding: 10px !important;
+          }
+          
+          .contact-form-container input,
+          .contact-form-container select,
+          .contact-form-container textarea {
+            padding: 10px 12px !important;
+            border-radius: 10px !important;
+            font-size: 0.9rem !important;
+          }
+          
+          .contact-form-container button[type="submit"] {
+            padding: 9px 12px !important;
+            font-size: 0.9rem !important;
+            border-radius: 16px !important;
+            width: 100% !important;
+            max-width: 280px !important;
+          }
+          
+          .mb-5 {
+            margin-bottom: 1.5rem !important;
+          }
+          
+          /* Small Mobile Heading Sizes */
+          h2 {
+            font-size: 1.5rem !important;
+            padding: 0 5px !important;
+          }
+          
+          h3 {
+            font-size: 1.1rem !important;
+          }
+          
+          .lead {
+            font-size: 0.9rem !important;
+          }
+          
+          p {
+            padding: 0 5px !important;
+          }
+          
+          /* Our Location Badge Small Mobile */
+          .location-badge {
+            padding: 4px 8px !important;
+          }
+          
+          .location-badge .location-icon {
+            font-size: 0.7rem !important;
+            margin-right: 5px !important;
+          }
+          
+          .location-badge .location-text {
+            font-size: 0.65rem !important;
+          }
+          
+          /* Our Location Heading Small Mobile */
+          .location-heading {
+            font-size: 1.3rem !important;
+            line-height: 1.2 !important;
+          }
+          
+          h2.location-heading {
+            font-size: 1.3rem !important;
+            line-height: 1.2 !important;
+          }
+          
+          /* Override inline style for small mobile */
+          h2.location-heading[style] {
+            font-size: 1.3rem !important;
+            line-height: 1.2 !important;
+          }
+          
+          /* Small Mobile Badge Styles */
+          .premium-badge {
+            padding: 4px 8px !important;
+            font-size: 0.6rem !important;
+            margin-bottom: 10px !important;
+          }
+          
+          /* Mobile fw-bold mb-4 Elements */
+          .fw-bold.mb-4 {
+            margin-bottom: 24px !important;
+          }
+          
+          .contact-info-heading {
+            font-size: 1.3rem !important;
+            margin-bottom: 0.8rem !important;
+          }
+          
+          .contact-info-card {
+            padding: 16px 12px !important;
             border-radius: 15px !important;
-            margin: 15px 0 !important;
+            margin-bottom: 10px !important;
+          }
+          
+          .contact-info-icon {
+            width: 40px !important;
+            height: 40px !important;
+            min-width: 40px !important;
+            border-radius: 10px !important;
+            margin-right: 12px !important;
+          }
+          
+          .contact-info-icon svg {
+            font-size: 1rem !important;
+          }
+          
+          .contact-info-title {
+            font-size: 0.95rem !important;
+            margin-bottom: 6px !important;
+          }
+          
+          .contact-info-detail {
+            font-size: 0.85rem !important;
+            line-height: 1.4 !important;
+          }
+          
+          /* Follow Us Small Mobile Styles */
+          .follow-us-heading {
+            font-size: 1.1rem !important;
+            margin-bottom: 0.8rem !important;
+          }
+          
+          .social-links-container {
+            gap: 10px !important;
+          }
+          
+          .social-link-item {
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 10px !important;
+          }
+          
+          .social-link-item .social-icon {
+            font-size: 1rem !important;
           }
           
           .social-link {
@@ -812,19 +997,76 @@ const Contact = () => {
           
         }
         
-        @media (max-width: 576px) {
+        @media (max-width: 480px) {
           #contact {
-            padding: 2rem 0 !important;
+            padding: 1.5rem 0 !important;
+          }
+          
+          .container {
+            padding-left: 10px !important;
+            padding-right: 10px !important;
           }
           
           .contact-form-container {
-            padding: 25px 15px !important;
+            padding: 15px 10px !important;
             border-radius: 15px !important;
           }
           
+          .map-section-container {
+            padding: 8px !important;
+          }
+          
+          .contact-info-heading {
+            font-size: 1.2rem !important;
+            margin-bottom: 0.75rem !important;
+          }
+          
           .contact-info-card {
-            padding: 18px 12px !important;
+            padding: 14px 10px !important;
             border-radius: 12px !important;
+            margin-bottom: 8px !important;
+          }
+          
+          .contact-info-icon {
+            width: 35px !important;
+            height: 35px !important;
+            min-width: 35px !important;
+            border-radius: 8px !important;
+            margin-right: 10px !important;
+          }
+          
+          .contact-info-icon svg {
+            font-size: 0.9rem !important;
+          }
+          
+          .contact-info-title {
+            font-size: 0.9rem !important;
+            margin-bottom: 5px !important;
+          }
+          
+          .contact-info-detail {
+            font-size: 0.8rem !important;
+            line-height: 1.3 !important;
+          }
+          
+          /* Follow Us Very Small Mobile Styles */
+          .follow-us-heading {
+            font-size: 1rem !important;
+            margin-bottom: 0.75rem !important;
+          }
+          
+          .social-links-container {
+            gap: 8px !important;
+          }
+          
+          .social-link-item {
+            width: 35px !important;
+            height: 35px !important;
+            border-radius: 8px !important;
+          }
+          
+          .social-link-item .social-icon {
+            font-size: 0.9rem !important;
           }
           
           .social-link {
@@ -837,6 +1079,45 @@ const Contact = () => {
             border-radius: 15px !important;
           }
           
+          /* Our Location Badge Very Small Mobile */
+          .location-badge {
+            padding: 3px 6px !important;
+          }
+          
+          .location-badge .location-icon {
+            font-size: 0.65rem !important;
+            margin-right: 4px !important;
+          }
+          
+          .location-badge .location-text {
+            font-size: 0.6rem !important;
+          }
+          
+          /* Our Location Heading Very Small Mobile */
+          .location-heading {
+            font-size: 1.2rem !important;
+            line-height: 1.2 !important;
+          }
+          
+          h2.location-heading {
+            font-size: 1.2rem !important;
+            line-height: 1.2 !important;
+          }
+          
+          /* Override inline style for very small mobile */
+          h2.location-heading[style] {
+            font-size: 1.2rem !important;
+            line-height: 1.2 !important;
+          }
+          
+          h2 {
+            font-size: 1.3rem !important;
+            padding: 0 !important;
+          }
+          
+          p {
+            padding: 0 !important;
+          }
         }
       `}</style>
     </section>

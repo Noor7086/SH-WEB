@@ -17,7 +17,7 @@ import CountUp from './CountUp';
 const Achievements = () => {
   const stats = [
     {
-      number: 150,
+      number: 20,
       suffix: "+",
       label: "Apps Live",
       icon: <FaMobile />,
@@ -25,57 +25,32 @@ const Achievements = () => {
       color: "#667eea"
     },
     {
-      number: 200,
+      number: 50,
       suffix: "+",
-      label: "Websites Live",
+      label: "Websites",
       icon: <FaGlobe />,
       description: "Web applications and websites deployed globally",
       color: "#764ba2"
     },
     {
-      number: 500,
-      suffix: "+",
-      label: "Designs Created",
-      icon: <FaPalette />,
-      description: "Creative designs and UI/UX solutions delivered",
-      color: "#f093fb"
-    },
-    {
-      number: 50000,
+      number: 20000,
       suffix: "+",
       label: "Active Users",
       icon: <FaUsers />,
       description: "Users actively using our applications worldwide",
       color: "#4facfe"
-    },
-    {
-      number: 100000,
-      suffix: "+",
-      label: "App Downloads",
-      icon: <FaDownload />,
-      description: "Total downloads across all our mobile applications",
-      color: "#43e97b"
-    },
-    {
-      number: 75,
-      suffix: "+",
-      label: "Startups Helped",
-      icon: <FaBuilding />,
-      description: "Startups we've helped launch and scale their business",
-      color: "#fa709a"
     }
   ];
 
   return (
     <section id="achievements" style={{
-      background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
-      minHeight: '100vh',
+      background: 'transparent',
       display: 'flex',
       alignItems: 'center',
       position: 'relative',
       overflow: 'hidden',
-      paddingTop: '80px',
-      paddingBottom: '80px'
+      paddingTop: '50px',
+      paddingBottom: '50px'
     }}>
       {/* Premium Background Elements */}
       <div className="position-absolute" style={{
@@ -108,11 +83,11 @@ const Achievements = () => {
         animation: 'float 7s ease-in-out infinite'
       }}></div>
 
-      <Container style={{ position: 'relative', zIndex: 2 }}>
+      <Container style={{ position: 'relative', zIndex: 2, maxWidth: '1200px' }}>
         {/* Header Section */}
         <Row className="text-center mb-5">
-          <Col lg={10} className="mx-auto" data-aos="fade-up">
-            <div style={{
+          <Col lg={10} md={11} sm={12} className="mx-auto" data-aos="fade-up">
+            <div className="premium-badge" style={{
               display: 'inline-block',
               padding: '12px 24px',
               background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -132,24 +107,31 @@ const Achievements = () => {
                 fontWeight: '600',
                 fontSize: '1rem'
               }}>
-                Celebrating Our Success
+                Our Impact in Numbers
               </span>
             </div>
             
-            <h2 className="display-4 fw-bold mb-4" style={{
-              background: 'linear-gradient(135deg, #1e293b 0%, #475569 50%, #667eea 100%)',
+            <h2 style={{
+              fontSize: '3rem',
+              fontWeight: '800',
+              marginBottom: '1.5rem',
+              background: 'linear-gradient(135deg, #1a1a2e 0%, #667eea 50%, #764ba2 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
+              backgroundClip: 'text',
+              lineHeight: '1.2'
             }}>
               Our Impact in Numbers
             </h2>
             
-            <p className="fs-4 text-muted" style={{
-              maxWidth: '600px',
-              margin: '0 auto',
+            <p style={{
+              fontSize: '1.25rem',
+              color: '#6c757d',
               lineHeight: '1.6',
-              fontWeight: '400'
+              maxWidth: '550px',
+              margin: '0 auto',
+              fontWeight: '400',
+              padding: '0 15px'
             }}>
               Transforming ideas into reality with measurable results that speak for themselves
             </p>
@@ -157,9 +139,9 @@ const Achievements = () => {
         </Row>
 
         {/* Statistics Grid */}
-        <Row className="g-4">
+        <Row className="g-4 justify-content-center">
           {stats.map((stat, index) => (
-            <Col lg={4} md={6} sm={12} key={index} data-aos="fade-up" data-aos-delay={index * 100}>
+            <Col lg={4} md={4} sm={12} key={index} data-aos="fade-up" data-aos-delay={index * 100}>
               <div className="premium-stat-card" style={{
                 background: 'linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.95) 100%)',
                 borderRadius: '25px',
@@ -317,7 +299,7 @@ const Achievements = () => {
 
       </Container>
 
-      <style jsx>{`
+      <style>{`
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-20px); }
@@ -347,6 +329,19 @@ const Achievements = () => {
           animation: glow 2s ease-in-out infinite !important;
         }
         
+        /* Container Width Reduction */
+        @media (min-width: 1200px) {
+          .container {
+            max-width: 1140px !important;
+          }
+        }
+        
+        @media (min-width: 992px) and (max-width: 1199px) {
+          .container {
+            max-width: 960px !important;
+          }
+        }
+        
         /* Desktop spacing optimization */
         @media (min-width: 769px) {
           .container {
@@ -356,80 +351,38 @@ const Achievements = () => {
         }
         
         /* Mobile Responsive Styles */
-        @media (max-width: 768px) {
-          #achievements {
-            min-height: auto !important;
-            padding: 2rem 0 !important;
-          }
-          
+        @media (max-width: 992px) {
           .container {
             padding-left: 20px !important;
             padding-right: 20px !important;
           }
-          
-          .display-4 {
-            font-size: 2.2rem !important;
-            line-height: 1.2 !important;
+        }
+        
+        @media (max-width: 768px) {
+          #achievements {
+            min-height: auto !important;
+            padding: 1.5rem 0 !important;
           }
           
-          .fs-4 {
-            font-size: 1rem !important;
+          /* Mobile Badge Styles */
+          .premium-badge {
+            padding: 8px 16px !important;
+            font-size: 0.75rem !important;
+            margin-bottom: 15px !important;
+          }
+          
+          .premium-badge span {
+            font-size: 0.75rem !important;
+          }
+          
+          /* Mobile Heading Sizes */
+          h2 {
+            font-size: 1.8rem !important;
             padding: 0 10px !important;
           }
           
-          .badge {
-            padding: 8px 16px !important;
-            font-size: 0.9rem !important;
-          }
-          
-          .badge svg {
-            font-size: 1rem !important;
-          }
-          
-          .premium-stat-card {
-            padding: 25px 15px !important;
-            border-radius: 20px !important;
-            margin: 10px 0 !important;
-            height: 280px !important;
-          }
-          
-          .premium-stat-card h2 {
-            font-size: 2.2rem !important;
-          }
-          
-          .premium-stat-card h5 {
-            font-size: 1rem !important;
-          }
-          
-          .premium-stat-card p {
-            font-size: 0.8rem !important;
-            max-width: 100% !important;
-          }
-          
-          .premium-stat-card .icon-container {
-            width: 60px !important;
-            height: 60px !important;
-            border-radius: 15px !important;
-          }
-          
-          .premium-stat-card .icon-container svg {
-            font-size: 1.4rem !important;
-          }
-          
-          .row {
-            margin-left: -5px !important;
-            margin-right: -5px !important;
-          }
-          
-          .col-lg-4, .col-md-6 {
-            padding-left: 5px !important;
-            padding-right: 5px !important;
-          }
-        }
-        
-        @media (max-width: 576px) {
-          #achievements {
-            padding: 1.5rem 0 !important;
+          p {
+            padding: 0 10px !important;
           }
           
           .container {
@@ -437,59 +390,161 @@ const Achievements = () => {
             padding-right: 15px !important;
           }
           
-          .display-4 {
-            font-size: 1.8rem !important;
-            margin-bottom: 15px !important;
-          }
-          
-          .fs-4 {
-            font-size: 0.9rem !important;
-            padding: 0 5px !important;
-          }
-          
-          .badge {
-            padding: 6px 12px !important;
-            font-size: 0.8rem !important;
-          }
-          
+          /* Smaller, cleaner stat cards on mobile */
           .premium-stat-card {
-            padding: 20px 10px !important;
-            border-radius: 15px !important;
-            height: 260px !important;
-            margin: 8px 0 !important;
+            padding: 20px 12px !important;
+            border-radius: 18px !important;
+            margin: 8px auto !important;
+            height: 240px !important;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08) !important;
+            width: 100% !important;
+            max-width: 320px !important;
           }
           
           .premium-stat-card h2 {
-            font-size: 2rem !important;
+            font-size: 1.5rem !important;
+            line-height: 1.2 !important;
+            margin-bottom: 6px !important;
           }
           
           .premium-stat-card h5 {
-            font-size: 0.9rem !important;
+            font-size: 0.85rem !important;
+            margin-bottom: 6px !important;
           }
           
           .premium-stat-card p {
             font-size: 0.75rem !important;
+            max-width: 100% !important;
             line-height: 1.4 !important;
           }
           
           .premium-stat-card .icon-container {
-            width: 50px !important;
-            height: 50px !important;
+            width: 48px !important;
+            height: 48px !important;
+            border-radius: 14px !important;
+          }
+          
+          .premium-stat-card .icon-container svg {
+            font-size: 1.1rem !important;
+          }
+          
+          .row {
+            margin-left: -5px !important;
+            margin-right: -5px !important;
+          }
+        }
+        
+        @media (max-width: 576px) {
+          #achievements {
+            padding: 1rem 0 !important;
+          }
+          
+          /* Small Mobile Badge Styles */
+          .premium-badge {
+            padding: 6px 12px !important;
+            font-size: 0.65rem !important;
+            margin-bottom: 12px !important;
+          }
+          
+          .premium-badge span {
+            font-size: 0.65rem !important;
+          }
+          
+          .premium-badge svg {
+            font-size: 1rem !important;
+            margin-right: 6px !important;
+          }
+          
+          h2 {
+            font-size: 1.5rem !important;
+            padding: 0 5px !important;
+          }
+          
+          p {
+            padding: 0 5px !important;
+          }
+          
+          .container {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+          }
+          
+          .mb-5 {
+            margin-bottom: 1.25rem !important;
+          }
+          
+          /* Smaller, cleaner stat cards on small mobile */
+          .premium-stat-card {
+            padding: 16px 10px !important;
+            border-radius: 16px !important;
+            height: 220px !important;
+            margin: 6px auto !important;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.07) !important;
+            width: 100% !important;
+            max-width: 300px !important;
+          }
+          
+          .premium-stat-card h2 {
+            font-size: 1.3rem !important;
+            line-height: 1.2 !important;
+            margin-bottom: 4px !important;
+          }
+          
+          .premium-stat-card h5 {
+            font-size: 0.75rem !important;
+            margin-bottom: 4px !important;
+          }
+          
+          .premium-stat-card p {
+            font-size: 0.7rem !important;
+            line-height: 1.35 !important;
+          }
+          
+          .premium-stat-card .icon-container {
+            width: 44px !important;
+            height: 44px !important;
             border-radius: 12px !important;
           }
           
           .premium-stat-card .icon-container svg {
-            font-size: 1.2rem !important;
+            font-size: 1rem !important;
           }
           
           .row {
             margin-left: -2px !important;
             margin-right: -2px !important;
           }
+        }
+        
+        @media (max-width: 480px) {
+          .container {
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+          }
           
-          .col-lg-4, .col-md-6 {
-            padding-left: 2px !important;
-            padding-right: 2px !important;
+          h2 {
+            font-size: 1.3rem !important;
+            padding: 0 !important;
+          }
+          
+          p {
+            padding: 0 !important;
+            font-size: 0.9rem !important;
+          }
+          
+          .premium-badge {
+            padding: 5px 10px !important;
+            font-size: 0.6rem !important;
+            margin-bottom: 10px !important;
+          }
+          
+          .premium-badge span {
+            font-size: 0.6rem !important;
+          }
+          
+          .premium-badge svg {
+            font-size: 0.9rem !important;
+            margin-right: 5px !important;
           }
         }
       `}</style>

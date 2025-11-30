@@ -9,9 +9,9 @@ import {
   FaGithub,
   FaEnvelope,
   FaPhone,
-  FaMapMarkerAlt,
   FaArrowUp
 } from 'react-icons/fa';
+import genLogo from '../assets/Android_portfolio/gen-logo.webp';
 
 const Footer = () => {
   const scrollToTop = () => {
@@ -101,19 +101,17 @@ const Footer = () => {
             <Col lg={4} md={6}>
               <div className="mb-4">
                 <div className="d-flex align-items-center mb-4">
-                  <div style={{
-                    width: '60px',
-                    height: '60px',
-                    borderRadius: '15px',
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginRight: '15px',
-                    boxShadow: '0 8px 25px rgba(102, 126, 234, 0.3)'
-                  }}>
-                    <FaRocket style={{ color: 'white', fontSize: '1.5rem' }} />
-                  </div>
+                  <img 
+                    src={genLogo} 
+                    alt="Gentrons Logo" 
+                    className="footer-logo"
+                    style={{
+                      height: '50px',
+                      width: 'auto',
+                      objectFit: 'contain',
+                      marginRight: '15px'
+                    }}
+                  />
                   <h4 className="fw-bold mb-0 text-white" style={{
                     background: 'linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%)',
                     WebkitBackgroundClip: 'text',
@@ -121,7 +119,7 @@ const Footer = () => {
                     backgroundClip: 'text',
                     fontSize: '1.8rem'
                   }}>
-                    TechHouse
+                    Gentrons
                   </h4>
                 </div>
                 <p className="text-white-50 mb-4" style={{
@@ -265,32 +263,10 @@ const Footer = () => {
                     marginRight: '15px',
                     flexShrink: 0
                   }}>
-                    <FaMapMarkerAlt style={{ color: 'white', fontSize: '1rem' }} />
-                  </div>
-                  <div>
-                    <p className="mb-1 text-white" style={{ fontSize: '1rem', fontWeight: '500' }}>123 Tech Street</p>
-                    <p className="mb-0 text-white-50" style={{ fontSize: '0.9rem' }}>Silicon Valley, CA 94025</p>
-                  </div>
-                </div>
-              </div>
-              <div className="mb-4">
-                <div className="d-flex align-items-start mb-3">
-                  <div style={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '10px',
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginRight: '15px',
-                    flexShrink: 0
-                  }}>
                     <FaPhone style={{ color: 'white', fontSize: '1rem' }} />
                   </div>
                   <div>
-                    <p className="mb-1 text-white" style={{ fontSize: '1rem', fontWeight: '500' }}>+1 (555) 123-4567</p>
-                    <p className="mb-0 text-white-50" style={{ fontSize: '0.9rem' }}>+1 (555) 987-6543</p>
+                    <p className="mb-1 text-white" style={{ fontSize: '1rem', fontWeight: '500' }}>03332736688</p>
                   </div>
                 </div>
               </div>
@@ -310,78 +286,13 @@ const Footer = () => {
                     <FaEnvelope style={{ color: 'white', fontSize: '1rem' }} />
                   </div>
                   <div>
-                    <p className="mb-1 text-white" style={{ fontSize: '1rem', fontWeight: '500' }}>info@techhouse.com</p>
-                    <p className="mb-0 text-white-50" style={{ fontSize: '0.9rem' }}>support@techhouse.com</p>
+                    <p className="mb-1 text-white" style={{ fontSize: '1rem', fontWeight: '500' }}>fahadshafiq77@gmail.com</p>
                   </div>
                 </div>
               </div>
             </Col>
           </Row>
         </Container>
-      </div>
-
-      {/* Newsletter Section */}
-      <div style={{
-        background: 'linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%)',
-        borderTop: '1px solid rgba(255,255,255,0.1)',
-        borderBottom: '1px solid rgba(255,255,255,0.1)'
-      }}>
-        <div className="py-4 position-relative" style={{ zIndex: 2 }}>
-          <Container>
-            <Row className="align-items-center">
-              <Col lg={6} className="mb-3 mb-lg-0">
-                <h5 className="fw-bold mb-2 text-white" style={{
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  fontSize: '1.3rem'
-                }}>
-                  Subscribe to Our Newsletter
-                </h5>
-                <p className="mb-0 text-white-50" style={{ fontSize: '1rem' }}>
-                  Stay updated with our latest projects and industry insights
-                </p>
-              </Col>
-              <Col lg={6}>
-                <div className="d-flex gap-2">
-                  <input 
-                    type="email" 
-                    className="form-control" 
-                    placeholder="Enter your email address"
-                    style={{
-                      background: 'rgba(255,255,255,0.1)',
-                      border: '1px solid rgba(255,255,255,0.2)',
-                      color: 'white',
-                      borderRadius: '10px',
-                      padding: '12px 15px'
-                    }}
-                  />
-                  <button style={{
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    border: 'none',
-                    borderRadius: '10px',
-                    padding: '12px 25px',
-                    color: 'white',
-                    fontWeight: '600',
-                    fontSize: '1rem',
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = 'translateY(-2px)';
-                    e.target.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.4)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.boxShadow = 'none';
-                  }}>
-                    Subscribe
-                  </button>
-                </div>
-              </Col>
-            </Row>
-          </Container>
-        </div>
       </div>
 
       {/* Bottom Footer */}
@@ -393,7 +304,7 @@ const Footer = () => {
           <Row className="align-items-center">
             <Col md={6} className="text-center text-md-start mb-2 mb-md-0">
               <p className="mb-0 text-white-50" style={{ fontSize: '0.95rem' }}>
-                © 2024 TechHouse. All rights reserved.
+                © 2024 Gentrons. All rights reserved.
               </p>
             </Col>
             <Col md={6} className="text-center text-md-end">
@@ -463,6 +374,12 @@ const Footer = () => {
       >
         <FaArrowUp />
       </button>
+      
+      <style>{`
+        .footer-logo {
+          filter: brightness(0) invert(1);
+        }
+      `}</style>
     </footer>
   );
 };

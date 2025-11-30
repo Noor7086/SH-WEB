@@ -1,22 +1,29 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Container, Row, Col, Card, Badge, Button, Modal } from 'react-bootstrap';
-import scuolaImage from '../assets/scuola.jpeg';
-import sucola2Image from '../assets/sucola2.jpeg';
-import scuola3Image from '../assets/scuola3.jpeg';
-import premierPulseImage from '../assets/premier pulse.jpeg';
-import premierPulse2Image from '../assets/premier pulse 2.jpeg';
-import premierPulse3Image from '../assets/premier pulse 3.jpeg';
+import scuolaImage from '../assets/scuola (1).webp';
+import sucola2Image from '../assets/sucola2.webp';
+import premierPulseImage from '../assets/premier pulse.webp';
+import premierPulse2Image from '../assets/premier pulse 2.webp';
 import weflexImage from '../assets/weflex.png';
 import americanImage from '../assets/american.png';
 import museumImage from '../assets/museum.png';
-import ess1Image from '../assets/ess1.jpeg';
-import ess2Image from '../assets/ess2.jpeg';
-import virtual1Image from '../assets/virtual1.PNG';
-import virtual2Image from '../assets/virtual2.PNG';
-import virtual3Image from '../assets/virtual3.PNG';
-import labImage from '../assets/lab.jpg';
-import lab2Image from '../assets/lab2.jpg';
-import lab3Image from '../assets/lab3.jpg';
+import ess1Image from '../assets/ess1.webp';
+import ess2Image from '../assets/ess2.webp';
+import virtual1Image from '../assets/virtual1.webp';
+import virtual2Image from '../assets/virtual2.webp';
+import virtual3Image from '../assets/virtual3.webp';
+import labImage from '../assets/lab.webp';
+import lab2Image from '../assets/lab2.webp';
+import lab3Image from '../assets/lab3.webp';
+// Graphic Design Logos from assets folder
+import graphicLogo1 from '../assets/logo1.webp';
+import graphicLogo2 from '../assets/logo2.webp';
+import graphicLogo3 from '../assets/logo3.webp';
+import graphicLogo4 from '../assets/logo4.webp';
+import graphicLogo5 from '../assets/logo5.webp';
+import graphicLogo6 from '../assets/logo-portfolio/logo9.webp';
+import graphicLogo7 from '../assets/logo7.webp';
+import graphicLogo8 from '../assets/logo8.webp';
 import { 
   FaExternalLinkAlt, 
   FaGithub, 
@@ -35,25 +42,24 @@ import {
 import CountUp from './CountUp';
 
 const Projects = () => {
+  const loadedImageRefs = useRef(new Set());
+
+  // Handle image load
+  const handleImageLoad = useCallback((e) => {
+    const src = e.target.src;
+    if (src && !loadedImageRefs.current.has(src)) {
+      loadedImageRefs.current.add(src);
+    }
+  }, []);
   const [selectedProject, setSelectedProject] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [activeCategory, setActiveCategory] = useState('mobile');
-  const [scrollY, setScrollY] = useState(0);
   const [currentAppIndex, setCurrentAppIndex] = useState(0);
   const [currentScreenIndex, setCurrentScreenIndex] = useState(0);
   const [currentDesktopAppIndex, setCurrentDesktopAppIndex] = useState(0);
   const [currentGraphicPage, setCurrentGraphicPage] = useState(0);
 
-  const handleScroll = useCallback(() => {
-    setScrollY(window.scrollY);
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
-
-  // Auto-advance screen every 3 seconds
+  // Auto-advance screen every 3 seconds - Optimized to prevent lag
   useEffect(() => {
     if (activeCategory === 'mobile') {
       const interval = setInterval(() => {
@@ -61,10 +67,12 @@ const Projects = () => {
       }, 3000);
 
       return () => clearInterval(interval);
+    } else {
+      setCurrentScreenIndex(0); // Reset when switching away
     }
   }, [activeCategory]);
 
-  // Auto-advance desktop app screen every 3 seconds
+  // Auto-advance desktop app screen every 3 seconds - Optimized to prevent lag
   useEffect(() => {
     if (activeCategory === 'desktop') {
       const interval = setInterval(() => {
@@ -72,17 +80,20 @@ const Projects = () => {
       }, 3000);
 
       return () => clearInterval(interval);
+    } else {
+      setCurrentScreenIndex(0); // Reset when switching away
     }
   }, [activeCategory]);
 
-  const projects = {
+  // Memoize projects to prevent recreation on every render
+  const projects = useMemo(() => ({
     mobile: [
       {
         id: 1,
         title: "Scuola Video LMS",
         description: "A comprehensive Learning Management System mobile application with video courses, interactive learning, progress tracking, and personalized educational content.",
         image: scuolaImage,
-        technologies: ["React Native", "Node.js", "MongoDB", "Video Streaming"],
+        technologies: ["Flutter", "Node.js", "MongoDB", "Video Streaming"],
         features: ["Video courses", "Progress tracking", "Offline learning", "User profiles"],
         metrics: { users: "10K+", rating: "4.8/5", downloads: "50K+" },
         links: { live: "#", github: "#" },
@@ -93,7 +104,7 @@ const Projects = () => {
         title: "Premier Pulse",
         description: "A premium mobile application featuring advanced UI/UX design, real-time analytics, and seamless user experience with modern interface elements.",
         image: premierPulseImage,
-        technologies: ["React Native", "TypeScript", "Redux", "Firebase"],
+        technologies: ["Flutter", "TypeScript", "Redux", "Firebase"],
         features: ["Modern UI/UX", "Real-time analytics", "Premium design", "Seamless navigation"],
         metrics: { users: "20K+", rating: "4.9/5", downloads: "85K+" },
         links: { live: "#", github: "#" },
@@ -179,13 +190,13 @@ const Projects = () => {
         mockupImages: [labImage, lab2Image, lab3Image]
       }
     ]
-  };
+  }), []);
 
   const categories = useMemo(() => [
     { id: 'mobile', name: 'Mobile Apps', icon: FaMobile, color: '#667eea' },
     { id: 'website', name: 'Web Development', icon: FaLaptop, color: '#28a745' },
-    { id: 'graphic', name: 'Graphic Design', icon: FaPalette, color: '#ff6b6b' },
-    { id: 'desktop', name: 'Desktop Apps', icon: FaDesktop, color: '#dc3545' }
+    { id: 'desktop', name: 'Desktop Apps', icon: FaDesktop, color: '#dc3545' },
+    { id: 'graphic', name: 'Graphic Design', icon: FaPalette, color: '#ff6b6b' }
   ], []);
 
   const handleProjectClick = (project) => {
@@ -195,11 +206,16 @@ const Projects = () => {
 
   const prevApp = useCallback(() => {
     setCurrentAppIndex((prev) => (prev - 1 + projects[activeCategory].length) % projects[activeCategory].length);
-  }, [activeCategory]);
+  }, [activeCategory, projects]);
 
   const nextApp = useCallback(() => {
     setCurrentAppIndex((prev) => (prev + 1) % projects[activeCategory].length);
-  }, [activeCategory]);
+  }, [activeCategory, projects]);
+
+  // Memoize current website project to prevent recalculation
+  const currentWebsiteProject = useMemo(() => {
+    return projects.website[currentAppIndex] || projects.website[0];
+  }, [projects.website, currentAppIndex]);
 
   return (
     <>
@@ -213,6 +229,15 @@ const Projects = () => {
             to {
               opacity: 1;
               transform: translateY(0);
+            }
+          }
+          
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+            }
+            to {
+              opacity: 1;
             }
           }
           
@@ -247,23 +272,150 @@ const Projects = () => {
             transform: perspective(1200px) rotateY(0deg) rotateX(0deg) scale(1.05) !important;
           }
           
+          /* Projects Section - Dynamic Height, Proper Spacing */
+          #projects {
+            padding-bottom: 20px !important;
+            margin-bottom: 20px !important;
+            height: auto !important;
+            min-height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+          }
+          
+          #projects .container {
+            padding-bottom: 0px !important;
+            margin-bottom: 0px !important;
+            height: auto !important;
+          }
+          
+          #projects .row:last-child {
+            margin-bottom: 0px !important;
+            padding-bottom: 0px !important;
+          }
+          
+          #projects .col:last-child {
+            margin-bottom: 0px !important;
+            padding-bottom: 0px !important;
+          }
+          
+          #projects .project-container {
+            margin-bottom: 0px !important;
+            padding-bottom: 0px !important;
+            height: auto !important;
+            min-height: auto !important;
+          }
+          
+          #projects .mobile-container,
+          #projects .website-container,
+          #projects .graphic-showcase,
+          #projects .desktop-showcase {
+            margin-bottom: 0px !important;
+            padding-bottom: 0px !important;
+            height: auto !important;
+            min-height: auto !important;
+          }
+          /* Ensure mobile-container has proper spacing from navigation */
+          .mobile-container {
+            margin-top: 20px !important;
+          }
+
+          
           @media (max-width: 768px) {
             #projects {
-              padding: 10px 0 80px 0 !important;
+              padding: 10px 0 30px 0 !important;
+              margin-bottom: 30px !important;
+            }
+            
+            #projects .container {
+              padding-bottom: 20px !important;
+              margin-bottom: 20px !important;
+            }
+            
+            #projects .row:last-child {
+              margin-bottom: 0px !important;
+              padding-bottom: 0px !important;
+            }
+            
+            #projects .col:last-child {
+              margin-bottom: 0px !important;
+              padding-bottom: 0px !important;
+            }
+            
+            /* Remove padding-top from Col lg={12} in mobile section */
+            #projects .row .col-lg-12 {
+              padding-top: 0px !important;
             }
             
             .container {
-              padding-left: 15px !important;
-              padding-right: 15px !important;
+              padding-left: 10px !important;
+              padding-right: 10px !important;
+            }
+            
+            /* Mobile Badge Styles */
+            .premium-badge {
+              padding: 6px 12px !important;
+              font-size: 0.7rem !important;
+              margin-bottom: 12px !important;
+            }
+            
+            /* Mobile pagination sizing unified (Mobile Apps) */
+            .app-navigation button {
+              width: 45px !important;
+              height: 45px !important;
+              font-size: 1rem !important;
+            }
+            
+            /* Mobile Apps Dots - Single Circular Dots */
+            .app-navigation .dots { gap: 6px !important; }
+            .app-navigation .dots div {
+              width: 10px !important;
+              height: 10px !important;
+              border-radius: 50% !important;
+            }
+            
+            .app-dots { gap: 6px !important; }
+            .app-dots button {
+              width: 8px !important;
+              height: 8px !important;
+            }
+
+            /* Mobile Gradient Elements */
+            .gradient-element {
+              padding: 4px 8px !important;
+              font-size: 0.6rem !important;
+              border-radius: 12px !important;
+              box-shadow: rgba(102, 126, 234, 0.2) 0px 2px 6px !important;
+              margin: 2px !important;
+            }
+            
+            /* Mobile Tech Badges Spacing */
+            .tech-badges, .metrics-badges {
+              gap: 12px !important;
+            }
+            
+            /* Mobile Action Buttons */
+            .mobile-action-buttons button {
+              padding: 8px 16px !important;
+              font-size: 0.7rem !important;
+              border-radius: 20px !important;
+            }
+            
+            /* Mobile fw-bold mb-4 Elements */
+            .fw-bold.mb-4 {
+              margin-bottom: 24px !important;
             }
             
             .display-4 {
-              font-size: 2.2rem !important;
+              font-size: 1.5rem !important;
               line-height: 1.2 !important;
             }
             
             .text-center.mb-5 {
-              margin-bottom: 2.5rem !important;
+              margin-bottom: 1.5rem !important;
+            }
+            
+            #projects .text-center.mb-5 {
+              margin-bottom: 0px !important;
             }
             
             /* Technologies and Metrics - Center in Mobile View */
@@ -337,6 +489,11 @@ const Projects = () => {
               margin-bottom: 10px !important;
             }
             
+            /* Mobile Apps Section - Main heading - slightly bigger */
+            .mobile-container .app-info-section h2 {
+              font-size: 1.6rem !important;
+            }
+            
             .app-info-section p {
               font-size: 1rem !important;
               margin-bottom: 12px !important;
@@ -346,17 +503,33 @@ const Projects = () => {
               font-size: 1rem !important;
             }
             
+            .tech-heading, .metrics-heading {
+              font-size: 1.3rem !important;
+            }
+            
+            /* Mobile Apps Section - Technologies Used heading */
+            .mobile-container .tech-heading,
+            .app-info-section .tech-heading {
+              font-size: 1.1rem !important;
+            }
+            
+            /* Mobile Apps Section - App Performance heading */
+            .mobile-container .metrics-heading,
+            .app-info-section .metrics-heading {
+              font-size: 1.1rem !important;
+            }
+            
             .tech-badges, .metrics-badges {
-              justify-content: center !important;
-              gap: 6px !important;
+              gap: 12px !important;
               flex-wrap: wrap !important;
+              justify-content: center !important;
             }
             
             .tech-badges .badge, .metrics-badges .badge {
-              padding: 1px 2px !important;
-              font-size: 0.4rem !important;
-              margin: 1px !important;
-              white-space: nowrap !important;
+              padding: 6px 12px !important;
+              font-size: 0.6rem !important;
+              border-radius: 15px !important;
+              margin: 2px !important;
             }
             
             .phone-display-section {
@@ -449,13 +622,59 @@ const Projects = () => {
           }
           
           @media (max-width: 576px) {
+            /* Small Mobile Spacing Reduction */
             #projects {
-              padding: 60px 0 60px 0 !important;
+              padding: 10px 0 30px 0 !important;
             }
             
             .container {
               padding-left: 10px !important;
               padding-right: 10px !important;
+            }
+            
+            /* Small Mobile Badge Styles */
+            .premium-badge {
+              padding: 4px 8px !important;
+              font-size: 0.6rem !important;
+              margin-bottom: 10px !important;
+            }
+            
+            /* Small mobile pagination sizing unified (Mobile Apps) */
+            .app-navigation button {
+              width: 40px !important;
+              height: 40px !important;
+              font-size: 0.9rem !important;
+            }
+            
+            /* Mobile Apps Dots - Single Circular Dots */
+            .app-navigation .dots { gap: 5px !important; }
+            .app-navigation .dots div {
+              width: 8px !important;
+              height: 8px !important;
+              border-radius: 50% !important;
+            }
+            
+            .app-dots { gap: 5px !important; }
+            .app-dots button {
+              width: 7px !important;
+              height: 7px !important;
+            }
+
+            /* Small Mobile Tech Badges Spacing */
+            .tech-badges, .metrics-badges {
+              gap: 10px !important;
+            }
+            
+            /* Small Mobile Action Buttons */
+            .mobile-action-buttons button {
+              padding: 6px 12px !important;
+              font-size: 0.6rem !important;
+              border-radius: 15px !important;
+            }
+            
+            /* Small Mobile fw-bold mb-4 Elements */
+            .fw-bold.mb-4 {
+              margin-bottom: 24px !important;
             }
             
             .display-4 {
@@ -465,6 +684,10 @@ const Projects = () => {
             
             .text-center.mb-5 {
               margin-bottom: 1rem !important;
+            }
+            
+            #projects .text-center.mb-5 {
+              margin-bottom: 0px !important;
             }
             
             .badge {
@@ -491,6 +714,11 @@ const Projects = () => {
               margin-bottom: 4px !important;
             }
             
+            /* Mobile Apps Section - Main heading - slightly bigger */
+            .mobile-container .app-info-section h2 {
+              font-size: 1.6rem !important;
+            }
+            
             .app-info-section p {
               font-size: 0.9rem !important;
               margin-bottom: 5px !important;
@@ -500,17 +728,32 @@ const Projects = () => {
               font-size: 0.9rem !important;
             }
             
+            .tech-heading, .metrics-heading {
+              font-size: 1.2rem !important;
+            }
+            
+            /* Mobile Apps Section - Technologies Used heading */
+            .mobile-container .tech-heading,
+            .app-info-section .tech-heading {
+              font-size: 1.1rem !important;
+            }
+            
+            /* Mobile Apps Section - App Performance heading */
+            .mobile-container .metrics-heading,
+            .app-info-section .metrics-heading {
+              font-size: 1.1rem !important;
+            }
+            
             .tech-badges, .metrics-badges {
-              gap: 4px !important;
+              gap: 10px !important;
               justify-content: center !important;
-              flex-wrap: wrap !important;
             }
             
             .tech-badges .badge, .metrics-badges .badge {
-              padding: 1px 2px !important;
-              font-size: 0.3rem !important;
+              padding: 4px 8px !important;
+              font-size: 0.5rem !important;
+              border-radius: 12px !important;
               margin: 1px !important;
-              white-space: nowrap !important;
             }
             
             .phone-display-section {
@@ -591,8 +834,24 @@ const Projects = () => {
           }
           
           @media (max-width: 480px) {
-            #projects {
-              padding: 1rem 0 1.5rem 0 !important;
+            /* Very small mobile pagination sizing unified (Mobile Apps) */
+            .app-navigation button {
+              width: 35px !important;
+              height: 35px !important;
+              font-size: 0.8rem !important;
+            }
+            
+            /* Mobile Apps Dots - Single Circular Dots */
+            .app-navigation .dots { gap: 5px !important; }
+            .app-navigation .dots div {
+              width: 7px !important;
+              height: 7px !important;
+              border-radius: 50% !important;
+            }
+            
+            .app-dots button {
+              width: 6px !important;
+              height: 6px !important;
             }
             
             .app-navigation {
@@ -639,8 +898,9 @@ const Projects = () => {
             }
             
             .tech-badges .badge, .metrics-badges .badge {
-              padding: 1px 1px !important;
-              font-size: 0.25rem !important;
+              padding: 3px 6px !important;
+              font-size: 0.4rem !important;
+              border-radius: 10px !important;
             }
             
             .action-buttons button {
@@ -654,7 +914,7 @@ const Projects = () => {
           @media (max-width: 768px) {
             .mobile-container {
               padding: 0 !important;
-              margin: 0 !important;
+              margin-top: 10px !important; margin-bottom: 0 !important;
             }
             
             .mobile-showcase {
@@ -666,7 +926,7 @@ const Projects = () => {
               gap: 0 !important;
               min-height: auto !important;
               padding: 0 !important;
-              margin-top: -20px !important;
+              margin-top: 10px !important;
             }
             
             .app-info-section {
@@ -697,12 +957,14 @@ const Projects = () => {
             
             .phone-display-section {
               order: 1 !important;
-              padding: 30px 15px !important;
+              padding: 0 !important;
               background: transparent !important;
               border-radius: 0 !important;
+              border: none !important;
+              box-shadow: none !important;
               position: relative !important;
               z-index: 1 !important;
-              min-height: 180px !important;
+              min-height: auto !important;
               display: flex !important;
               align-items: center !important;
               justify-content: center !important;
@@ -713,7 +975,17 @@ const Projects = () => {
               margin: 0 auto !important;
               filter: drop-shadow(0 6px 20px rgba(0,0,0,0.3)) !important;
               position: relative !important;
-              padding-top: 0px !important;
+              padding: 0 !important;
+              background: transparent !important;
+              border: none !important;
+              box-shadow: none !important;
+            }
+            
+            .phone-container {
+              background: transparent !important;
+              border: none !important;
+              box-shadow: none !important;
+              padding: 0 !important;
             }
             
             
@@ -724,9 +996,9 @@ const Projects = () => {
             }
             
             .tech-badges .badge, .metrics-badges .badge {
-              padding: 1px 1px !important;
-              font-size: 0.2rem !important;
-              border-radius: 6px !important;
+              padding: 1px 2px !important;
+              font-size: 0.15rem !important;
+              border-radius: 4px !important;
             }
             
             .action-buttons {
@@ -806,7 +1078,7 @@ const Projects = () => {
           /* Projects Section General Tablet Responsiveness */
           @media (max-width: 1203px) and (min-width: 769px) {
             #projects {
-              padding: 10px 0 80px 0 !important;
+              padding: 10px 0 10px 0 !important;
             }
             
             /* Typography */
@@ -858,7 +1130,7 @@ const Projects = () => {
             
             /* Section Spacing */
             #projects {
-              padding: 100px 0 80px 0 !important;
+              padding: 10px 0 10px 0 !important;
             }
             
             /* Showcase Sections */
@@ -937,8 +1209,8 @@ const Projects = () => {
           @media (max-width: 1203px) and (min-width: 769px) {
             .mobile-container {
               padding-top: -15px !important;
-              margin-top: -15px !important;
-              padding-bottom: 80px !important;
+              margin-top: 20px !important;
+              padding-bottom: 10px !important;
             }
             
             .app-showcase-content {
@@ -946,7 +1218,7 @@ const Projects = () => {
               gap: 15px !important;
               padding: 0px 0 20px 0 !important;
               min-height: auto !important;
-              margin-top: -25px !important;
+              margin-top: 20px !important;
             }
             
             .app-info-section {
@@ -974,26 +1246,27 @@ const Projects = () => {
           @media (max-width: 1024px) and (min-width: 820px) {
             .mobile-container {
               padding-top: -20px !important;
-              margin-top: -20px !important;
-              padding-bottom: 80px !important;
+              margin-top: 20px !important;
+              padding-bottom: 10px !important;
             }
             
             .app-showcase-content {
-              margin-top: -30px !important;
+              margin-top: 20px !important;
               padding-top: 0px !important;
-              padding-bottom: 20px !important;
+              padding-bottom: 10px !important;
             }
             
             .mobile-showcase {
-              margin-top: -15px !important;
+              margin-top: 20px !important;
             }
           }
+
           
           /* Advanced Mobile-Only Design for Small Screens */
           @media (max-width: 576px) {
             .mobile-container {
               padding: 0 !important;
-              margin: 0 !important;
+              margin-top: 10px !important; margin-bottom: 0 !important;
               border-radius: 0 !important;
             }
             
@@ -1008,10 +1281,12 @@ const Projects = () => {
             
             .phone-display-section {
               background: transparent !important;
-              padding: 25px 10px !important;
+              padding: 0 !important;
               border-radius: 0 !important;
+              border: none !important;
+              box-shadow: none !important;
               position: relative !important;
-              min-height: 200px !important;
+              min-height: auto !important;
               display: flex !important;
               align-items: center !important;
               justify-content: center !important;
@@ -1056,8 +1331,8 @@ const Projects = () => {
             
             .tech-badges .badge, .metrics-badges .badge {
               padding: 1px 1px !important;
-              font-size: 0.2rem !important;
-              border-radius: 4px !important;
+              font-size: 0.1rem !important;
+              border-radius: 3px !important;
               font-weight: 500 !important;
             }
             
@@ -1191,6 +1466,132 @@ const Projects = () => {
             }
           }
           
+          /* Desktop Development Section 1399px to 1203px Responsiveness */
+          @media (max-width: 1399px) and (min-width: 1204px) {
+            .desktop-monitor {
+              width: 550px !important;
+              height: 360px !important;
+              border-radius: 25px !important;
+              background: linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 15%, #1a1a1a 30%, #0f0f0f 50%, #1a1a1a 70%, #2a2a2a 85%, #3a3a3a 100%) !important;
+              box-shadow: 0 25px 80px rgba(0,0,0,0.4), 0 0 0 3px rgba(255,255,255,0.15), inset 0 2px 8px rgba(255,255,255,0.1), inset 0 -2px 8px rgba(0,0,0,0.3) !important;
+              border: 2px solid rgba(255,255,255,0.1) !important;
+            }
+            
+            .desktop-monitor::before {
+              height: 32px !important;
+              border-radius: 25px 25px 0 0 !important;
+              background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%) !important;
+            }
+            
+            .monitor-screen {
+              width: 520px !important;
+              height: 330px !important;
+              border-radius: 15px !important;
+              margin: 18px auto 0 !important;
+              background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+              box-shadow: inset 0 0 20px rgba(0,0,0,0.1) !important;
+              border: 1px solid rgba(0,0,0,0.05) !important;
+            }
+            
+            .monitor-stand {
+              width: 140px !important;
+              height: 38px !important;
+              bottom: -38px !important;
+              border-radius: 18px 18px 0 0 !important;
+              background: linear-gradient(145deg, #c0c0c0 0%, #a8a8a8 30%, #909090 70%, #787878 100%) !important;
+              box-shadow: 0 15px 45px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -2px 4px rgba(0,0,0,0.2) !important;
+              border: 1px solid rgba(255,255,255,0.2) !important;
+              border-bottom: none !important;
+            }
+            
+            .monitor-base {
+              width: 280px !important;
+              height: 32px !important;
+              bottom: -70px !important;
+              border-radius: 20px !important;
+              background: linear-gradient(145deg, #f8f8f8 0%, #f0f0f0 8%, #e8e8e8 16%, #e0e0e0 24%, #d8d8d8 32%, #d0d0d0 40%, #c8c8c8 48%, #c0c0c0 56%, #b8b8b8 64%, #b0b0b0 72%, #a8a8a8 80%, #a0a0a0 88%, #989898 96%, #909090 100%) !important;
+              box-shadow: 0 20px 50px rgba(0,0,0,0.4), inset 0 4px 8px rgba(255,255,255,0.7), inset 0 -4px 8px rgba(0,0,0,0.4), 0 0 0 2px rgba(255,255,255,0.2) !important;
+              border: 2px solid rgba(255,255,255,0.3) !important;
+              border-top: 1px solid rgba(255,255,255,0.4) !important;
+            }
+          }
+          
+          /* Website Development Section 1397px Responsiveness */
+          @media (max-width: 1397px) and (min-width: 1204px) {
+            .macbook-pro {
+              width: 490px !important;
+              height: 320px !important;
+            }
+            
+            .macbook-screen {
+              width: 490px !important;
+              height: 300px !important;
+            }
+            
+            .macbook-base {
+              width: 530px !important;
+              height: 16px !important;
+              bottom: -5px !important;
+            }
+          }
+          
+          /* Website Development Section 1392px Responsiveness */
+          @media (max-width: 1392px) and (min-width: 1204px) {
+            .macbook-pro {
+              width: 520px !important;
+              height: 340px !important;
+            }
+            
+            .macbook-screen {
+              width: 520px !important;
+              height: 320px !important;
+            }
+            
+            .macbook-base {
+              width: 560px !important;
+              height: 18px !important;
+              bottom: -5px !important;
+            }
+          }
+          
+          /* Website Development Section 1387px Responsiveness */
+          @media (max-width: 1387px) and (min-width: 1204px) {
+            .macbook-pro {
+              width: 550px !important;
+              height: 360px !important;
+            }
+            
+            .macbook-screen {
+              width: 550px !important;
+              height: 340px !important;
+            }
+            
+            .macbook-base {
+              width: 590px !important;
+              height: 20px !important;
+              bottom: -5px !important;
+            }
+          }
+          
+          /* Website Development Section 1384px Responsiveness */
+          @media (max-width: 1384px) and (min-width: 1204px) {
+            .macbook-pro {
+              width: 580px !important;
+              height: 380px !important;
+            }
+            
+            .macbook-screen {
+              width: 580px !important;
+              height: 360px !important;
+            }
+            
+            .macbook-base {
+              width: 620px !important;
+              height: 22px !important;
+              bottom: -5px !important;
+            }
+          }
+          
           /* Website Development Section Tablet Responsiveness */
           @media (max-width: 1203px) and (min-width: 769px) {
             .website-showcase-content {
@@ -1286,17 +1687,18 @@ const Projects = () => {
             
             /* Website Action Buttons */
             .website-action-buttons {
-              flex-direction: column !important;
-              gap: 15px !important;
+              flex-direction: row !important;
+              gap: 10px !important;
               align-items: center !important;
+              justify-content: center !important;
             }
             
             .website-action-buttons button {
-              width: 100% !important;
-              max-width: 200px !important;
-              padding: 12px 25px !important;
-              font-size: 1rem !important;
-              border-radius: 25px !important;
+              width: auto !important;
+              max-width: 180px !important;
+              padding: 10px 20px !important;
+              font-size: 0.9rem !important;
+              border-radius: 20px !important;
             }
             
             /* Website Browser Mockup */
@@ -1324,6 +1726,7 @@ const Projects = () => {
             .website-navigation .dots div {
               width: 8px !important;
               height: 8px !important;
+              border-radius: 50% !important;
             }
           }
           
@@ -1374,15 +1777,17 @@ const Projects = () => {
             
             /* Website Action Buttons */
             .website-action-buttons {
-              gap: 12px !important;
+              flex-direction: row !important;
+              gap: 8px !important;
               padding: 0 10px !important;
+              justify-content: center !important;
             }
             
             .website-action-buttons button {
-              max-width: 180px !important;
-              padding: 10px 20px !important;
-              font-size: 0.9rem !important;
-              border-radius: 20px !important;
+              max-width: 160px !important;
+              padding: 8px 16px !important;
+              font-size: 0.8rem !important;
+              border-radius: 18px !important;
             }
             
             /* Website Browser Mockup */
@@ -1410,6 +1815,7 @@ const Projects = () => {
             .website-navigation .dots div {
               width: 7px !important;
               height: 7px !important;
+              border-radius: 50% !important;
             }
           }
           
@@ -1469,6 +1875,7 @@ const Projects = () => {
             .website-navigation .dots div {
               width: 6px !important;
               height: 6px !important;
+              border-radius: 50% !important;
             }
           }
           
@@ -1476,14 +1883,14 @@ const Projects = () => {
           @media (max-width: 1203px) and (min-width: 769px) {
             .design-grid-container {
               grid-template-columns: repeat(3, 1fr) !important;
-              gap: 20px !important;
+              gap: 15px !important;
               max-width: 100% !important;
               padding: 0 15px !important;
             }
             
             .design-grid-container > div {
-              height: 200px !important;
-              border-radius: 18px !important;
+              height: 160px !important;
+              border-radius: 15px !important;
             }
             
             .graphic-showcase {
@@ -1495,14 +1902,14 @@ const Projects = () => {
           @media (max-width: 768px) {
             .design-grid-container {
               grid-template-columns: repeat(2, 1fr) !important;
-              gap: 15px !important;
+              gap: 12px !important;
               max-width: 100% !important;
               padding: 0 10px !important;
             }
             
             .design-grid-container > div {
-              height: 180px !important;
-              border-radius: 15px !important;
+              height: 150px !important;
+              border-radius: 12px !important;
             }
             
             .graphic-showcase {
@@ -1513,13 +1920,13 @@ const Projects = () => {
           @media (max-width: 576px) {
             .design-grid-container {
               grid-template-columns: repeat(2, 1fr) !important;
-              gap: 10px !important;
+              gap: 8px !important;
               padding: 0 5px !important;
             }
             
             .design-grid-container > div {
-              height: 140px !important;
-              border-radius: 12px !important;
+              height: 120px !important;
+              border-radius: 10px !important;
             }
             
             .graphic-showcase {
@@ -1530,13 +1937,13 @@ const Projects = () => {
           @media (max-width: 480px) {
             .design-grid-container {
               grid-template-columns: repeat(2, 1fr) !important;
-              gap: 8px !important;
+              gap: 6px !important;
               padding: 0 5px !important;
             }
             
             .design-grid-container > div {
-              height: 120px !important;
-              border-radius: 10px !important;
+              height: 100px !important;
+              border-radius: 8px !important;
             }
           }
           
@@ -1563,7 +1970,7 @@ const Projects = () => {
               transform: perspective(1000px) rotateX(12deg) rotateY(-12deg) rotateZ(3deg) !important;
               margin: 0 auto !important;
               transition: all 0.3s ease !important;
-              padding-bottom: 80px !important;
+              padding-bottom: 10px !important;
             }
             
             .desktop-setup:hover {
@@ -1576,7 +1983,8 @@ const Projects = () => {
               height: 360px !important;
               border-radius: 20px !important;
               background: linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 100%) !important;
-              box-shadow: 0 30px 100px rgba(0,0,0,0.5), 0 0 0 2px rgba(255,255,255,0.1), inset 0 0 0 1px rgba(255,255,255,0.05) !important;
+              box-shadow: 0 30px 100px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05), inset 0 0 0 1px rgba(255,255,255,0.05) !important;
+              border: 1px solid rgba(255,255,255,0.05) !important;
               position: relative !important;
               overflow: visible !important;
             }
@@ -1599,7 +2007,7 @@ const Projects = () => {
               border-radius: 20px 20px 0 0 !important;
               background: linear-gradient(145deg, #c0c0c0 0%, #a8a8a8 30%, #909090 70%, #787878 100%) !important;
               box-shadow: 0 15px 45px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -2px 4px rgba(0,0,0,0.2) !important;
-              border: 1px solid rgba(255,255,255,0.3) !important;
+              border: 1px solid rgba(255,255,255,0.2) !important;
               border-bottom: none !important;
             }
             
@@ -1610,7 +2018,7 @@ const Projects = () => {
               border-radius: 25px !important;
               background: linear-gradient(145deg, #d0d0d0 0%, #b8b8b8 20%, #a0a0a0 50%, #888888 80%, #707070 100%) !important;
               box-shadow: 0 20px 55px rgba(0,0,0,0.4), inset 0 3px 6px rgba(255,255,255,0.5), inset 0 -3px 6px rgba(0,0,0,0.3) !important;
-              border: 2px solid rgba(255,255,255,0.4) !important;
+              border: 2px solid rgba(255,255,255,0.3) !important;
             }
             
             .monitor-screen {
@@ -1620,7 +2028,7 @@ const Projects = () => {
               margin: 20px auto 0 !important;
               background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
               box-shadow: inset 0 0 25px rgba(0,0,0,0.1) !important;
-              border: 2px solid rgba(0,0,0,0.1) !important;
+              border: 1px solid rgba(0,0,0,0.05) !important;
             }
           }
           
@@ -1650,6 +2058,10 @@ const Projects = () => {
               padding: 20px !important;
             }
             
+            .desktop-info-section h2 {
+              margin-top: 60px !important;
+            }
+            
             /* Desktop Mockup Mobile Optimization - Amazing Design */
             .desktop-setup {
               transform: perspective(1000px) rotateX(12deg) rotateY(-12deg) rotateZ(3deg) !important;
@@ -1674,7 +2086,8 @@ const Projects = () => {
               height: 240px !important;
               border-radius: 18px !important;
               background: linear-gradient(145deg, #1a1a1a 0%, #000000 50%, #1a1a1a 100%) !important;
-              box-shadow: 0 25px 70px rgba(0,0,0,0.5), 0 0 0 2px rgba(255,255,255,0.1), inset 0 0 0 1px rgba(255,255,255,0.05) !important;
+              box-shadow: 0 25px 70px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05), inset 0 0 0 1px rgba(255,255,255,0.05) !important;
+              border: 1px solid rgba(255,255,255,0.05) !important;
               position: relative !important;
               overflow: visible !important;
             }
@@ -1697,7 +2110,7 @@ const Projects = () => {
               border-radius: 16px 16px 0 0 !important;
               background: linear-gradient(145deg, #c0c0c0 0%, #a8a8a8 30%, #909090 70%, #787878 100%) !important;
               box-shadow: 0 12px 35px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -2px 4px rgba(0,0,0,0.2) !important;
-              border: 1px solid rgba(255,255,255,0.3) !important;
+              border: 1px solid rgba(255,255,255,0.2) !important;
               border-bottom: none !important;
             }
             
@@ -1708,7 +2121,7 @@ const Projects = () => {
               border-radius: 18px !important;
               background: linear-gradient(145deg, #d0d0d0 0%, #b8b8b8 20%, #a0a0a0 50%, #888888 80%, #707070 100%) !important;
               box-shadow: 0 15px 40px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.5), inset 0 -2px 4px rgba(0,0,0,0.3) !important;
-              border: 1px solid rgba(255,255,255,0.4) !important;
+              border: 1px solid rgba(255,255,255,0.3) !important;
             }
             
             .monitor-screen {
@@ -1718,7 +2131,7 @@ const Projects = () => {
               margin: 18px auto 0 !important;
               background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
               box-shadow: inset 0 0 20px rgba(0,0,0,0.1) !important;
-              border: 2px solid rgba(0,0,0,0.1) !important;
+              border: 1px solid rgba(0,0,0,0.05) !important;
             }
             
             /* Desktop Mockup Content Mobile Fix */
@@ -1831,7 +2244,7 @@ const Projects = () => {
             .desktop-setup {
               max-width: 280px !important;
               gap: 12px !important;
-              padding-bottom: 50px !important;
+              padding-bottom: 10px !important;
             }
             
             .desktop-monitor {
@@ -1949,35 +2362,183 @@ const Projects = () => {
               border-radius: 18px !important;
             }
           }
+          
+          /* Graphic navigation size matches website */
+          .graphic-navigation button {
+            width: 45px !important;
+            height: 45px !important;
+            font-size: 1rem !important;
+          }
+          .graphic-navigation .dots { gap: 6px !important; }
+          .graphic-navigation .dots div {
+            width: 8px !important;
+            height: 8px !important;
+          }
+          
+          @media (max-width: 576px) {
+            .graphic-navigation button {
+              width: 40px !important;
+              height: 40px !important;
+              font-size: 0.9rem !important;
+            }
+            .graphic-navigation .dots { gap: 5px !important; }
+            .graphic-navigation .dots div {
+              width: 7px !important;
+              height: 7px !important;
+            }
+          }
+          
+          @media (max-width: 480px) {
+            .graphic-navigation button {
+              width: 35px !important;
+              height: 35px !important;
+              font-size: 0.8rem !important;
+            }
+            .graphic-navigation .dots div {
+              width: 6px !important;
+              height: 6px !important;
+            }
+          }
+
+          @media (max-width: 768px) {
+            /* Desktop pagination mobile sizing */
+            .desktop-navigation button {
+              width: 45px !important;
+              height: 45px !important;
+              font-size: 1rem !important;
+            }
+            .desktop-navigation .dots { gap: 6px !important; }
+            .desktop-navigation .dots div {
+              width: 8px !important;
+              height: 8px !important;
+              border-radius: 50% !important;
+            }
+          }
+
+          @media (max-width: 576px) {
+            .desktop-navigation button {
+              width: 40px !important;
+              height: 40px !important;
+              font-size: 0.9rem !important;
+            }
+            .desktop-navigation .dots { gap: 5px !important; }
+            .desktop-navigation .dots div {
+              width: 7px !important;
+              height: 7px !important;
+              border-radius: 50% !important;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .desktop-navigation button {
+              width: 35px !important;
+              height: 35px !important;
+              font-size: 0.8rem !important;
+            }
+            .desktop-navigation .dots div {
+              width: 6px !important;
+              height: 6px !important;
+              border-radius: 50% !important;
+            }
+          }
         `}
       </style>
       <section id="projects" style={{ 
-        background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #ffffff 100%)',
-        minHeight: '100vh',
+        background: 'transparent',
         position: 'relative',
-        overflow: 'hidden',
-        animation: 'fadeInUp 0.8s ease-out',
-        paddingTop: '20px',
-        paddingBottom: '120px',
-        marginTop: '90px'
-      }}>
-      <Container>
-        <Row className="justify-content-center">
-          <Col lg={8} className="text-center mb-5">
+        overflow: 'visible',
+        animation: 'fadeInUp 0.3s ease-out',
+        paddingTop: '10px',
+        paddingBottom: '20px',
+        marginTop: '0px',
+        marginBottom: '20px',
+        height: 'auto',
+        minHeight: 'auto',
+        maxHeight: 'none'
+      }} className="projects-section">
+      {/* Light Particles Background */}
+      <div className="position-absolute" style={{
+        top: '10%',
+        left: '5%',
+        width: '200px',
+        height: '200px',
+        background: 'radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%)',
+        borderRadius: '50%',
+        animation: 'float 6s ease-in-out infinite',
+        zIndex: 0
+      }}></div>
+      
+      <div className="position-absolute" style={{
+        top: '20%',
+        right: '10%',
+        width: '150px',
+        height: '150px',
+        background: 'radial-gradient(circle, rgba(118, 75, 162, 0.1) 0%, transparent 70%)',
+        borderRadius: '50%',
+        animation: 'float 8s ease-in-out infinite reverse',
+        zIndex: 0
+      }}></div>
+      
+      <div className="position-absolute" style={{
+        bottom: '15%',
+        left: '15%',
+        width: '100px',
+        height: '100px',
+        background: 'radial-gradient(circle, rgba(102, 126, 234, 0.08) 0%, transparent 70%)',
+        borderRadius: '50%',
+        animation: 'float 7s ease-in-out infinite',
+        zIndex: 0
+      }}></div>
+
+      <Container style={{ position: 'relative', zIndex: 1, paddingBottom: '0px !important', marginBottom: '0px !important' }}>
+        <Row className="justify-content-center" style={{ marginBottom: '0px' }}>
+          <Col lg={8} className="text-center" style={{ marginBottom: '0px' }}>
+            <div className="premium-badge" style={{
+              display: 'inline-block',
+              padding: '12px 24px',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              borderRadius: '10px',
+              boxShadow: '0 8px 25px rgba(102, 126, 234, 0.3)',
+              border: '2px solid rgba(255,255,255,0.2)',
+              backdropFilter: 'blur(10px)',
+              marginBottom: '20px'
+            }}>
+              <FaCode style={{ 
+                color: 'white', 
+                marginRight: '8px',
+                fontSize: '1.2rem'
+              }} />
+              <span style={{ 
+                color: 'white', 
+                fontWeight: '600',
+                fontSize: '1rem'
+              }}>
+                Our Projects
+              </span>
+            </div>
            
-            <h2 className="display-4 fw-bold mb-4" style={{ 
-              color: '#2c3e50',
+            <h2 style={{
               fontSize: '3rem',
-              textShadow: '0 2px 4px rgba(0,0,0,0.1)',
-              letterSpacing: '-0.02em',
+              fontWeight: '800',
+              marginBottom: '1.5rem',
+              background: 'linear-gradient(135deg, #1a1a2e 0%, #667eea 50%, #764ba2 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
               lineHeight: '1.2'
             }}>
               Our Projects
             </h2>
-            <p className="lead" style={{ 
-              color: '#6c757d',
+            <p style={{ 
               fontSize: '1.25rem',
-              lineHeight: '1.5'
+              color: '#6c757d',
+              lineHeight: '1.6',
+              maxWidth: '600px',
+              marginLeft: 'auto',
+                    marginRight: 'auto',
+                    marginTop: '80px',
+              marginBottom: '40px',
+              fontWeight: '400'
             }}>
               Explore our portfolio of innovative projects across different platforms and technologies.
             </p>
@@ -1985,9 +2546,9 @@ const Projects = () => {
         </Row>
 
         {/* Category Navigation */}
-        <Row className="justify-content-center">
+        <Row className="justify-content-center" style={{ marginBottom: '20px' }}>
           <Col lg={10}>
-            <div className="d-flex justify-content-center flex-wrap gap-2 gap-md-3" style={{
+            <div className="d-flex justify-content-center flex-wrap gap-2 gap-md-3" style={{ marginBottom: '10px',
               padding: '0 15px'
             }}>
               {categories.map((category) => {
@@ -1995,7 +2556,11 @@ const Projects = () => {
                 return (
                 <button
                   key={category.id}
-                  onClick={() => setActiveCategory(category.id)}
+                  onClick={() => {
+                    setActiveCategory(category.id);
+                    setCurrentAppIndex(0);
+                    setCurrentScreenIndex(0);
+                  }}
                     className={`btn d-flex align-items-center gap-2 category-nav-btn ${
                       activeCategory === category.id ? 'active' : ''
                     }`}
@@ -2008,40 +2573,25 @@ const Projects = () => {
                       padding: '12px 24px',
                       fontSize: '0.9rem',
                       fontWeight: '600',
-                      transition: 'all 0.3s ease',
+                      transition: 'all 0.15s ease',
                       boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                       minWidth: '140px',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      willChange: 'transform, background-color',
+                      cursor: 'pointer'
               }}
               onMouseEnter={(e) => {
                     if (activeCategory !== category.id) {
-                         e.target.style.backgroundColor = '#f8f9fa';
-                         e.target.style.borderColor = 'rgba(26, 26, 26, 0.3)';
-                         e.target.style.color = '#2c3e50';
-                        e.target.style.transform = 'translateY(-2px)';
-                        e.target.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
                     } else {
-                        e.target.style.backgroundColor = '#1a1a1a';
-                        e.target.style.borderColor = 'rgba(26, 26, 26, 0.3)';
-                        e.target.style.color = '#ffffff';
-                        e.target.style.transform = 'translateY(-2px)';
-                        e.target.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';
                     }
               }}
               onMouseLeave={(e) => {
-                    if (activeCategory !== category.id) {
-                        e.target.style.backgroundColor = '#ffffff';
-                         e.target.style.borderColor = 'rgba(26, 26, 26, 0.3)';
-                         e.target.style.color = '#2c3e50';
-                        e.target.style.transform = 'translateY(0)';
-                        e.target.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-                    } else {
-                        e.target.style.backgroundColor = '#2c3e50';
-                        e.target.style.borderColor = 'rgba(26, 26, 26, 0.3)';
-                        e.target.style.color = '#ffffff';
-                        e.target.style.transform = 'translateY(0)';
-                        e.target.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-                    }
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
                   }}
                 >
                     <Icon />
@@ -2054,24 +2604,28 @@ const Projects = () => {
         </Row>
 
         {/* Projects Content */}
-        <Row className="justify-content-center" style={{ marginTop: '0px' }}>
-          <Col lg={12}>
-            <div className="project-container" data-aos="fade-up" data-aos-delay="400">
+        <Row className="justify-content-center" style={{ marginTop: '10px', marginBottom: '30px' }}>
+          <Col lg={12} style={{ marginBottom: '30px', paddingBottom: '0px' }}>
+            <div 
+              key={activeCategory}
+              className="project-container" 
+              data-aos="fade-up" 
+              data-aos-delay="400" 
+              style={{ 
+                marginBottom: '0px', 
+                paddingBottom: '0px',
+                transition: 'opacity 0.2s ease',
+                willChange: 'opacity',
+                marginTop: activeCategory === 'mobile' ? '10px' : '0px',
+              }}
+            >
               {activeCategory === 'mobile' && (
-                <div className="mobile-container" style={{ 
-                  width: '100%', 
-                  maxWidth: '1600px', 
-                  margin: '0 auto', 
-                  paddingBottom: '60px', 
-                  paddingTop: '0px',
-                  marginTop: '-20px'
-                }}>
+                <>
                   {/* Main Carousel Container */}
                   <div className="mobile-showcase" style={{
                     position: 'relative',
                     maxWidth: '1600px',
-                    margin: '0 auto',
-                    transform: `translateY(${scrollY * 0.02}px)`
+                    margin: '0 auto'
                   }}>
                     
                     {/* App Content */}
@@ -2079,11 +2633,15 @@ const Projects = () => {
                       display: 'flex',
                       alignItems: 'center',
                       gap: '30px',
-                      minHeight: '200px',
+                      minHeight: '600px',
+                      height: 'auto',
                       justifyContent: 'flex-start',
                       flexDirection: 'row',
-                      padding: '0px 20px 20px 20px'
+                      padding: '0px 20px 20px 20px',
+                      marginTop: '0px',
+                      
                     }}>
+                         
                       
                       {/* Left Side - App Info */}
                       <div className="app-info-section" style={{
@@ -2109,6 +2667,7 @@ const Projects = () => {
                           color: '#2c3e50',
                           marginBottom: '35px'
                         }}>
+                          
                           {projects.mobile[currentAppIndex].description}
                         </p>
                         
@@ -2116,13 +2675,14 @@ const Projects = () => {
                         <div className="mb-4">
                           <h5 className="fw-bold mb-3 tech-heading" style={{ 
                             color: '#2c3e50', 
-                            fontSize: '1.2rem',
+                            fontSize: '1.5rem',
                             marginBottom: '16px'
                           }}>Technologies Used</h5>
                           <div className="d-flex flex-wrap tech-badges" style={{ gap: '12px' }}>
                             {projects.mobile[currentAppIndex].technologies.map((tech, index) => (
                               <span
                                 key={index}
+                                className="gradient-element"
                     style={{
                                   background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                                   color: 'white',
@@ -2136,20 +2696,21 @@ const Projects = () => {
                                 {tech}
                               </span>
                             ))}
-                  </div>
-                </div>
-                
+                          </div>
+                        </div>
+                        
                         {/* Metrics */}
-                  <div className="mb-4">
+                        <div className="mb-4">
                           <h5 className="fw-bold mb-3 metrics-heading" style={{ 
                             color: '#2c3e50', 
-                            fontSize: '1.2rem',
+                            fontSize: '1.5rem',
                             marginBottom: '16px'
                           }}>App Performance</h5>
                           <div className="d-flex flex-wrap metrics-badges" style={{ gap: '12px' }}>
                             {Object.entries(projects.mobile[currentAppIndex].metrics).map(([key, value], index) => (
                               <span
                                 key={index}
+                                className="gradient-element"
                                 style={{
                                   background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)',
                                   color: 'white',
@@ -2166,62 +2727,8 @@ const Projects = () => {
                           </div>
                   </div>
                   
-                        {/* Action Buttons */}
-                        <div className="d-flex gap-4 mt-5 action-buttons mobile-action-buttons">
-                          <button
-                            onClick={() => window.open(projects.mobile[currentAppIndex].links.live, '_blank')}
-                            style={{
-                              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                              color: 'white',
-                              border: 'none',
-                              padding: '15px 30px',
-                              borderRadius: '30px',
-                              fontSize: '1rem',
-                              fontWeight: '600',
-                              cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                              boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
-              }}
-              onMouseEnter={(e) => {
-                              e.target.style.transform = 'translateY(-3px)';
-                              e.target.style.boxShadow = '0 15px 40px rgba(102, 126, 234, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                              e.target.style.transform = 'translateY(0)';
-                              e.target.style.boxShadow = '0 10px 30px rgba(102, 126, 234, 0.3)';
-                            }}
-                          >
-                            <FaPlay className="me-2" />
-                            View App
-                          </button>
-                          <button
-                            onClick={() => window.open(projects.mobile[currentAppIndex].links.github, '_blank')}
-                    style={{
-                              background: 'transparent',
-                              color: '#667eea',
-                              border: '2px solid #667eea',
-                              padding: '13px 30px',
-                              borderRadius: '30px',
-                              fontSize: '1rem',
-                              fontWeight: '600',
-                              cursor: 'pointer',
-                              transition: 'all 0.3s ease'
-                            }}
-                            onMouseEnter={(e) => {
-                              e.target.style.background = '#667eea';
-                              e.target.style.color = 'white';
-                              e.target.style.transform = 'translateY(-3px)';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.target.style.background = 'transparent';
-                              e.target.style.color = '#667eea';
-                              e.target.style.transform = 'translateY(0)';
-                            }}
-                          >
-                            View Code
-                          </button>
-                    </div>
-                        </div>
+                       {/* Action Buttons removed per request */}
+                       </div>
                       
                       {/* Right Side - Phone Display */}
                       <div className="phone-display-section mobile-phone-container" style={{
@@ -2230,20 +2737,21 @@ const Projects = () => {
                         flexDirection: 'column',
                         alignItems: 'center',
                         gap: '30px',
-                        borderRadius: '20px',
-                        background: 'rgba(255,255,255,0.05)',
-                        backdropFilter: 'blur(10px)',
-                        padding: '0px 20px 40px 20px',
-                        border: '1px solid rgba(255,255,255,0.1)'
+                        borderRadius: '0',
+                        background: 'transparent',
+                        backdropFilter: 'none',
+                        padding: '0',
+                        border: 'none'
                       }}>
                         
                         {/* Phone Container */}
                         <div className="phone-container" style={{
                           position: 'relative',
                           transform: 'perspective(1000px) rotateY(-15deg) rotateX(12deg)',
-                          transition: 'all 0.3s ease',
+                          transition: 'all 0.2s ease',
                           cursor: 'pointer',
-                          borderRadius: '50px'
+                          borderRadius: '50px',
+                          willChange: 'transform'
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1.05)';
@@ -2395,8 +2903,11 @@ const Projects = () => {
                                   justifyContent: 'center'
                                  }}>
                                    <img 
-                                     src={projects.mobile[currentAppIndex].mockupImages ? projects.mobile[currentAppIndex].mockupImages[0] : projects.mobile[currentAppIndex].image} 
+                                     src={projects.mobile[currentAppIndex].mockupImages ? projects.mobile[currentAppIndex].mockupImages[0] : projects.mobile[currentAppIndex].image}
+                                     onLoad={handleImageLoad} 
                                      alt={`${projects.mobile[currentAppIndex].title} App`}
+                                     loading="lazy"
+                                     decoding="async"
                                      style={{
                                        width: '100%',
                                        height: '100%',
@@ -2460,6 +2971,9 @@ const Projects = () => {
                                    <img 
                                      src={projects.mobile[currentAppIndex].mockupImages ? projects.mobile[currentAppIndex].mockupImages[1] : projects.mobile[currentAppIndex].image} 
                                      alt={`${projects.mobile[currentAppIndex].title} App - Second View`}
+                                     loading="lazy"
+                                     decoding="async"
+                                     onLoad={handleImageLoad}
                                      style={{
                                        width: '100%',
                                        height: '100%',
@@ -2523,6 +3037,9 @@ const Projects = () => {
                                    <img 
                                      src={projects.mobile[currentAppIndex].mockupImages ? projects.mobile[currentAppIndex].mockupImages[1] : projects.mobile[currentAppIndex].image} 
                                      alt={`${projects.mobile[currentAppIndex].title} App - Third View`}
+                                     loading="lazy"
+                                     decoding="async"
+                                     onLoad={handleImageLoad}
                                      style={{
                                        width: '100%',
                                        height: '100%',
@@ -2615,7 +3132,7 @@ const Projects = () => {
                         style={{
                           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                           color: 'white',
-                          border: 'none',
+                          border: '2px solid rgba(255,255,255,0.1)',
                           borderRadius: '50%',
                           width: '55px',
                           height: '55px',
@@ -2625,8 +3142,7 @@ const Projects = () => {
                           fontSize: '1.2rem',
                           cursor: 'pointer',
                           transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                          boxShadow: '0 10px 30px rgba(102, 126, 234, 0.4)',
-                          border: '2px solid rgba(255,255,255,0.1)'
+                          boxShadow: '0 10px 30px rgba(102, 126, 234, 0.4)'
                         }}
                         onMouseEnter={(e) => {
                           e.target.style.transform = 'translateY(-3px) scale(1.05)';
@@ -2647,14 +3163,15 @@ const Projects = () => {
                             key={index}
                             onClick={() => setCurrentAppIndex(index)}
                             style={{
-                              width: index === currentAppIndex ? '30px' : '10px',
+                              width: '10px',
                               height: '10px',
-                              borderRadius: '5px',
+                              borderRadius: '50%',
                               background: index === currentAppIndex 
                                 ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' 
                                 : 'rgba(102, 126, 234, 0.3)',
                               cursor: 'pointer',
-                              transition: 'all 0.3s ease'
+                              transition: 'all 0.15s ease',
+                              willChange: 'background'
                             }}
                           />
                         ))}
@@ -2665,7 +3182,7 @@ const Projects = () => {
                         style={{
                           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                           color: 'white',
-                          border: 'none',
+                          border: '2px solid rgba(255,255,255,0.1)',
                           borderRadius: '50%',
                           width: '55px',
                           height: '55px',
@@ -2675,8 +3192,7 @@ const Projects = () => {
                           fontSize: '1.2rem',
                           cursor: 'pointer',
                           transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                          boxShadow: '0 10px 30px rgba(102, 126, 234, 0.4)',
-                          border: '2px solid rgba(255,255,255,0.1)'
+                          boxShadow: '0 10px 30px rgba(102, 126, 234, 0.4)'
                         }}
                         onMouseEnter={(e) => {
                           e.target.style.transform = 'translateY(-3px) scale(1.05)';
@@ -2689,16 +3205,22 @@ const Projects = () => {
                       >
                         →
                       </button>
-                </div>
+                    </div>
                   </div>
-                        </div>
-                      )}
+                </>
+              )}
 
               {activeCategory === 'website' && (
-                <div className="website-container" style={{ 
-                  paddingBottom: '60px', 
-                  paddingTop: '0px' 
-                }}>
+                <div 
+                  key="website"
+                  className="website-container" 
+                  style={{ 
+                    paddingBottom: '10px', 
+                    paddingTop: '0px',
+                    animation: 'fadeIn 0.2s ease-in',
+                    willChange: 'opacity'
+                  }}
+                >
                   {/* Enhanced Website Showcase with Carousel */}
                   <div className="website-showcase" style={{
                     position: 'relative',
@@ -2712,6 +3234,7 @@ const Projects = () => {
                       alignItems: 'center',
                       gap: '60px',
                       minHeight: '600px',
+                      height: 'auto',
                       padding: '40px 0',
                       justifyContent: 'flex-start',
                       flexDirection: 'row'
@@ -2736,7 +3259,7 @@ const Projects = () => {
                           marginBottom: '20px',
                           lineHeight: '1.2'
                         }}>
-                          {projects.website[currentAppIndex]?.title || "Modern Web Solutions"}
+                          {currentWebsiteProject?.title || "Modern Web Solutions"}
                         </h2>
                         
                         {/* Website Description */}
@@ -2746,7 +3269,7 @@ const Projects = () => {
                           color: '#2c3e50',
                           marginBottom: '25px'
                         }}>
-                          {projects.website[currentAppIndex]?.description || "Creating stunning web experiences with cutting-edge technologies and modern design principles."}
+                          {currentWebsiteProject?.description || "Creating stunning web experiences with cutting-edge technologies and modern design principles."}
                         </p>
                         
                         {/* Technologies */}
@@ -2757,7 +3280,7 @@ const Projects = () => {
                             marginBottom: '12px'
                           }}>Technologies Used</h5>
                           <div className="d-flex flex-wrap website-tech-badges" style={{ gap: '8px' }}>
-                            {(projects.website[currentAppIndex]?.technologies || ["React", "Node.js", "MongoDB"]).map((tech, index) => (
+                            {(currentWebsiteProject?.technologies || ["React", "Node.js", "MongoDB"]).map((tech, index) => (
                               <span
                                 key={index}
                                 className="badge"
@@ -2786,7 +3309,7 @@ const Projects = () => {
                             marginBottom: '12px'
                           }}>Performance Metrics</h5>
                           <div className="d-flex flex-wrap website-metrics-badges" style={{ gap: '8px' }}>
-                            {Object.entries(projects.website[currentAppIndex]?.metrics || {users: "50K+", performance: "98%"}).map(([key, value], index) => (
+                            {Object.entries(currentWebsiteProject?.metrics || {users: "50K+", performance: "98%"}).map(([key, value], index) => (
                               <span
                                 key={index}
                                 className="badge"
@@ -2806,62 +3329,7 @@ const Projects = () => {
                     </div>
                         </div>
                         
-                        {/* Action Buttons */}
-                        <div className="d-flex gap-4 website-action-buttons">
-                          <button
-                            onClick={() => window.open(projects.website[currentAppIndex]?.links?.live || "#", '_blank')}
-                            style={{
-                              background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)',
-                              color: 'white',
-                              border: 'none',
-                              borderRadius: '50px',
-                              padding: '15px 35px',
-                              fontSize: '1.1rem',
-                              fontWeight: '600',
-                              boxShadow: '0 15px 35px rgba(40, 167, 69, 0.4)',
-                              transition: 'all 0.3s ease',
-                              cursor: 'pointer'
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.transform = 'translateY(-3px)';
-                              e.currentTarget.style.boxShadow = '0 20px 40px rgba(40, 167, 69, 0.6)';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.transform = 'translateY(0)';
-                              e.currentTarget.style.boxShadow = '0 15px 35px rgba(40, 167, 69, 0.4)';
-                            }}
-                          >
-                            <FaPlay className="me-2" />
-                            Live Demo
-                          </button>
-                          
-                          <button
-                            onClick={() => window.open(projects.website[currentAppIndex]?.links?.github || "#", '_blank')}
-                            style={{
-                              background: 'rgba(40, 167, 69, 0.1)',
-                              color: '#28a745',
-                              border: '2px solid #28a745',
-                              borderRadius: '50px',
-                              padding: '15px 35px',
-                              fontSize: '1.1rem',
-                              fontWeight: '600',
-                              transition: 'all 0.3s ease',
-                              cursor: 'pointer'
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.background = '#28a745';
-                              e.currentTarget.style.color = 'white';
-                              e.currentTarget.style.transform = 'translateY(-3px)';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.background = 'rgba(40, 167, 69, 0.1)';
-                              e.currentTarget.style.color = '#28a745';
-                              e.currentTarget.style.transform = 'translateY(0)';
-                            }}
-                          >
-                            View Code
-                          </button>
-                        </div>
+                        {/* Action buttons removed per request */}
                         </div>
                       
                       {/* Right Side - MacBook Mockup */}
@@ -2872,8 +3340,9 @@ const Projects = () => {
                         alignItems: 'center',
                         position: 'relative',
                         transform: 'perspective(1200px) rotateY(-15deg) rotateX(10deg)',
-                        transition: 'all 0.4s ease',
-                        marginRight: '0'
+                        transition: 'transform 0.2s ease',
+                        marginRight: '0',
+                        willChange: 'transform'
                       }}>
                         {/* MacBook Pro Mockup */}
                         <div className="macbook-pro" style={{
@@ -2883,7 +3352,7 @@ const Projects = () => {
                           cursor: 'pointer'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.parentElement.style.transform = 'perspective(1200px) rotateY(-5deg) rotateX(5deg) scale(1.05)';
+                          e.currentTarget.parentElement.style.transform = 'perspective(1200px) rotateY(-5deg) rotateX(5deg) scale(1.02)';
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.parentElement.style.transform = 'perspective(1200px) rotateY(-15deg) rotateX(10deg) scale(1)';
@@ -2994,8 +3463,10 @@ const Projects = () => {
                               boxShadow: 'inset 0 0 20px rgba(0,0,0,0.1)'
                             }}>
                               <img 
-                                src={projects.website[currentAppIndex]?.image || weflexImage} 
-                                alt={projects.website[currentAppIndex]?.title || "Website"}
+                                src={currentWebsiteProject?.image || weflexImage}
+                                alt={currentWebsiteProject?.title || "Website"}
+                                loading="lazy"
+                                decoding="async"
                                 style={{
                                   width: '100%',
                                   height: 'auto',
@@ -3005,40 +3476,47 @@ const Projects = () => {
                                   position: 'absolute',
                                   top: '0',
                                   left: '0',
-                                  transition: 'transform 25s ease-in-out',
-                                  transform: 'translateY(0)'
+                                  transition: 'transform 0.3s ease-out',
+                                  transform: 'translate3d(0, 0, 0)',
+                                  willChange: 'transform'
                                 }}
                                 onLoad={(e) => {
+                                  handleImageLoad(e);
                                   const img = e.target;
                                   const container = img.parentElement;
-                                  const containerHeight = container.clientHeight;
-                                  const containerWidth = container.clientWidth;
+                                  if (!container) return;
                                   
-                                  // Calculate the actual height the image will have when scaled to full width
-                                  const imageAspectRatio = img.naturalWidth / img.naturalHeight;
-                                  const scaledHeight = containerWidth / imageAspectRatio;
-                                  
-                                  // Set the image height to show the complete image
-                                  img.style.height = `${scaledHeight}px`;
-                                  
-                                  // Calculate how much we need to scroll to show the complete image
-                                  // This ensures we stop exactly when the image ends
-                                  const scrollAmount = Math.max(0, scaledHeight - containerHeight);
-                                  img.scrollAmount = scrollAmount;
-                                  img.maxScroll = scrollAmount;
+                                  requestAnimationFrame(() => {
+                                    const containerHeight = container.clientHeight;
+                                    const containerWidth = container.clientWidth;
+                                    
+                                    // Calculate the actual height the image will have when scaled to full width
+                                    const imageAspectRatio = img.naturalWidth / img.naturalHeight;
+                                    const scaledHeight = containerWidth / imageAspectRatio;
+                                    
+                                    // Set the image height to show the complete image
+                                    img.style.height = `${scaledHeight}px`;
+                                    
+                                    // Calculate how much we need to scroll to show the complete image
+                                    const scrollAmount = Math.max(0, scaledHeight - containerHeight);
+                                    img.scrollAmount = scrollAmount;
+                                    img.maxScroll = scrollAmount;
+                                  });
                                 }}
                                 onMouseEnter={(e) => {
                                   const img = e.target;
                                   if (img.scrollAmount > 0) {
-                                    // Calculate the exact translateY to stop at the end of the image
-                                    const translateY = -(img.scrollAmount / img.parentElement.clientHeight) * 100;
-                                    // Ensure we don't scroll beyond the image
-                                    const maxTranslateY = Math.min(translateY, -(img.maxScroll / img.parentElement.clientHeight) * 100);
-                                    img.style.transform = `translateY(${maxTranslateY}%)`;
+                                    requestAnimationFrame(() => {
+                                      const container = img.parentElement;
+                                      if (!container) return;
+                                      const translateY = -(img.scrollAmount / container.clientHeight) * 100;
+                                      const maxTranslateY = Math.min(translateY, -(img.maxScroll / container.clientHeight) * 100);
+                                      img.style.transform = `translate3d(0, ${maxTranslateY}%, 0)`;
+                                    });
                                   }
                                 }}
                                 onMouseLeave={(e) => {
-                                  e.target.style.transform = 'translateY(0)';
+                                  e.target.style.transform = 'translate3d(0, 0, 0)';
                                 }}
                               />
                             </div>
@@ -3072,11 +3550,12 @@ const Projects = () => {
                           fontSize: '1.2rem',
                           cursor: 'pointer',
                           boxShadow: '0 10px 25px rgba(40, 167, 69, 0.3)',
-                          transition: 'all 0.3s ease'
+                          transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                          willChange: 'transform'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'scale(1.1)';
-                          e.currentTarget.style.boxShadow = '0 15px 35px rgba(40, 167, 69, 0.5)';
+                          e.currentTarget.style.transform = 'scale(1.05)';
+                          e.currentTarget.style.boxShadow = '0 12px 30px rgba(40, 167, 69, 0.4)';
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.transform = 'scale(1)';
@@ -3093,14 +3572,15 @@ const Projects = () => {
                             key={index}
                             onClick={() => setCurrentAppIndex(index)}
                             style={{
-                              width: index === currentAppIndex ? '30px' : '10px',
+                              width: '10px',
                               height: '10px',
-                              borderRadius: '5px',
+                              borderRadius: '50%',
                               background: index === currentAppIndex 
                                 ? 'linear-gradient(135deg, #28a745 0%, #20c997 100%)' 
                                 : 'rgba(40, 167, 69, 0.3)',
                               cursor: 'pointer',
-                              transition: 'all 0.3s ease'
+                              transition: 'all 0.15s ease',
+                              willChange: 'background'
                             }}
                           />
                         ))}
@@ -3121,11 +3601,12 @@ const Projects = () => {
                           fontSize: '1.2rem',
                           cursor: 'pointer',
                           boxShadow: '0 10px 25px rgba(40, 167, 69, 0.3)',
-                          transition: 'all 0.3s ease'
+                          transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                          willChange: 'transform'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'scale(1.1)';
-                          e.currentTarget.style.boxShadow = '0 15px 35px rgba(40, 167, 69, 0.5)';
+                          e.currentTarget.style.transform = 'scale(1.05)';
+                          e.currentTarget.style.boxShadow = '0 12px 30px rgba(40, 167, 69, 0.4)';
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.transform = 'scale(1)';
@@ -3140,31 +3621,37 @@ const Projects = () => {
                       )}
 
               {activeCategory === 'graphic' && (
-                <div className="graphic-showcase" style={{
-                  paddingTop: '20px',
-                  paddingBottom: '60px'
-                }}>
+                <div 
+                  key="graphic"
+                  className="graphic-showcase" 
+                  style={{
+                    paddingTop: '20px',
+                    paddingBottom: '10px',
+                    animation: 'fadeIn 0.2s ease-in',
+                    willChange: 'opacity'
+                  }}
+                >
                   
                   {/* Design Grid Container */}
                     <div className="design-grid-container" style={{
                       display: 'grid',
                       gridTemplateColumns: 'repeat(4, 1fr)',
-                      gap: '25px',
+                      gap: '20px',
                       perspective: '1000px',
                       width: '100%',
                       maxWidth: '1200px',
                       marginTop: '30px'
                     }}>
                       {[
-                        { image: 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=400&h=400&fit=crop', title: 'Brand Identity' },
-                        { image: 'https://images.unsplash.com/photo-1558655146-d09347e92766?w=400&h=400&fit=crop', title: 'Logo Design' },
-                        { image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&h=400&fit=crop', title: 'Web Design' },
-                        { image: 'https://images.unsplash.com/photo-1558655146-8d4b08db4a2b?w=400&h=400&fit=crop', title: 'Print Design' },
-                        { image: 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=400&h=400&fit=crop', title: 'UI/UX Design' },
-                        { image: 'https://images.unsplash.com/photo-1558655146-d09347e92766?w=400&h=400&fit=crop', title: 'Social Media' },
-                        { image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&h=400&fit=crop', title: 'Packaging' },
-                      { image: 'https://images.unsplash.com/photo-1558655146-8d4b08db4a2b?w=400&h=400&fit=crop', title: 'Illustration' }
-                      ].slice(currentGraphicPage * 8, (currentGraphicPage + 1) * 8).map((design, index) => (
+                        { image: graphicLogo1, title: 'Minimal Mark' },
+                        { image: graphicLogo2, title: 'Creative Badge' },
+                        { image: graphicLogo3, title: 'Monogram' },
+                        { image: graphicLogo4, title: 'Geometric Brand' },
+                        { image: graphicLogo5, title: 'Gradient Symbol' },
+                        { image: graphicLogo6, title: 'Modern Design' },
+                        { image: graphicLogo7, title: 'Elegant Logo' },
+                        { image: graphicLogo8, title: 'Bold Identity' }
+                      ].map((design, index) => (
                         <div key={index} style={{
                           borderRadius: '25px',
                           overflow: 'hidden',
@@ -3174,7 +3661,7 @@ const Projects = () => {
                           position: 'relative',
                           cursor: 'pointer',
                           transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                          height: '280px',
+                          height: '240px',
                           background: 'transparent',
                           border: 'none'
                         }}
@@ -3250,14 +3737,77 @@ const Projects = () => {
                   </div>
                   
                   {/* Navigation Controls */}
+                  
+                  
+                  {/* Design Categories Info */}
                   <div style={{
-                    display: 'flex',
+                    textAlign: 'center',
+                    marginTop: '20px',
+                    padding: '20px',
+                    background: 'rgba(255,255,255,0.05)',
+                    borderRadius: '20px',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    maxWidth: '800px',
+                    margin: '20px auto 0'
+                  }}>
+                    <h3 style={{ 
+                      color: '#2c3e50', 
+                      fontSize: '1.8rem', 
+                      marginBottom: '15px',
+                      background: 'linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent'
+                    }}>
+                      Creative Design Solutions
+                    </h3>
+                    <p style={{ 
+                      color: '#6c757d', 
+                      fontSize: '1.1rem', 
+                      lineHeight: '1.6',
+                      marginBottom: '20px'
+                    }}>
+                      From brand identity to digital illustrations, we create stunning visual experiences that captivate and inspire.
+                    </p>
+                    <p style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      flexWrap: 'wrap',
+                      gap: '15px'
+                    }}>
+                      {/* Graphic categories badges */}
+                      <div className="graphic-badges" style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        flexWrap: 'wrap',
+                        gap: '15px'
+                      }}>
+                        {['Brand Identity', 'Logo Design', 'UI/UX', 'Print Design', 'Social Media', 'Packaging'].map((category, index) => (
+                          <span key={index} className="badge" style={{
+                            background: 'linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%)',
+                            color: 'white',
+                            padding: '8px 16px',
+                            borderRadius: '20px',
+                            fontSize: '0.9rem',
+                            fontWeight: '500',
+                            boxShadow: '0 4px 15px rgba(255, 107, 107, 0.3)'
+                          }}>
+                            {category}
+                          </span>
+                        ))}
+                      </div>
+                    </p>
+                  </div>
+
+                  {/* Navigation Controls - Hidden since we only show 5 logos */}
+                  <div className="graphic-navigation" style={{
+                    display: 'none',
                     justifyContent: 'center',
                     alignItems: 'center',
                     gap: '25px',
-                    marginTop: '20px',
+                    marginTop: '0px',
                     marginBottom: '30px',
-                    padding: '25px 0'
+                    padding: '20px 0'
                   }}>
                     <button
                       onClick={() => setCurrentGraphicPage((prev) => Math.max(0, prev - 1))}
@@ -3336,74 +3886,28 @@ const Projects = () => {
                       →
                     </button>
                   </div>
-                  
-                  {/* Design Categories Info */}
-                  <div style={{
-                    textAlign: 'center',
-                    marginTop: '20px',
-                    padding: '20px',
-                    background: 'rgba(255,255,255,0.05)',
-                    borderRadius: '20px',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    maxWidth: '800px',
-                    margin: '20px auto 0'
-                  }}>
-                    <h3 style={{ 
-                      color: '#2c3e50', 
-                      fontSize: '1.8rem', 
-                      marginBottom: '15px',
-                      background: 'linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent'
-                    }}>
-                      Creative Design Solutions
-                    </h3>
-                    <p style={{ 
-                      color: '#6c757d', 
-                      fontSize: '1.1rem', 
-                      lineHeight: '1.6',
-                      marginBottom: '20px'
-                    }}>
-                      From brand identity to digital illustrations, we create stunning visual experiences that captivate and inspire.
-                    </p>
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      flexWrap: 'wrap',
-                      gap: '15px'
-                    }}>
-                      {['Brand Identity', 'Logo Design', 'UI/UX', 'Print Design', 'Social Media', 'Packaging'].map((category, index) => (
-                        <span key={index} style={{
-                          background: 'linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%)',
-                          color: 'white',
-                          padding: '8px 16px',
-                          borderRadius: '20px',
-                          fontSize: '0.9rem',
-                          fontWeight: '500',
-                          boxShadow: '0 4px 15px rgba(255, 107, 107, 0.3)'
-                        }}>
-                          {category}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
                         </div>
                       )}
 
               {activeCategory === 'desktop' && (
-                <div className="desktop-showcase" style={{
-                  maxWidth: '1600px',
-                  margin: '0 auto 0 auto',
-                  paddingTop: '20px',
-                  paddingBottom: '60px',
-                  padding: '20px 20px 0 20px'
+                <div 
+                  key="desktop"
+                  className="desktop-showcase" 
+                  style={{
+                    maxWidth: '1600px',
+                    margin: '0 auto 0 auto',
+                    paddingTop: '20px',
+                    paddingBottom: '10px',
+                    animation: 'fadeIn 0.2s ease-in',
+                    willChange: 'opacity',
+                  padding: '20px 20px 10px 20px'
                 }}>
                   <div className="desktop-showcase-content" style={{
                     display: 'flex',
                     gap: '60px',
                     alignItems: 'center',
-                    minHeight: '600px',
+                    minHeight: 'auto',
+                    height: 'auto',
                     flexDirection: 'row',
                     justifyContent: 'flex-start'
                   }}>
@@ -3424,7 +3928,7 @@ const Projects = () => {
                         backgroundClip: 'text',
                         transition: 'opacity 0.5s ease-in-out'
                       }}>
-                        {projects.desktop[currentAppIndex]?.title || "Desktop Application Solutions"}
+                        {projects.desktop[currentDesktopAppIndex]?.title || "Desktop Application Solutions"}
                       </h2>
                       <p style={{
                         fontSize: '16px',
@@ -3433,13 +3937,13 @@ const Projects = () => {
                         lineHeight: '1.6',
                         transition: 'opacity 0.5s ease-in-out'
                       }}>
-                        {projects.desktop[currentAppIndex]?.description || "Building powerful desktop applications with cutting-edge technology and exceptional user experience."}
+                        {projects.desktop[currentDesktopAppIndex]?.description || "Building powerful desktop applications with cutting-edge technology and exceptional user experience."}
                       </p>
                       
                       <div style={{ marginBottom: '30px' }}>
                         <h3 style={{ fontSize: '18px', marginBottom: '15px', color: '#2c3e50' }}>Application Features:</h3>
                         <ul style={{ listStyle: 'none', padding: 0 }}>
-                          {(projects.desktop[currentAppIndex]?.features || ['Cross-Platform', 'High Performance', 'Secure & Reliable', 'User-Friendly']).map((feature, index) => (
+                          {(projects.desktop[currentDesktopAppIndex]?.features || ['Cross-Platform', 'High Performance', 'Secure & Reliable', 'User-Friendly']).map((feature, index) => (
                             <li key={index} style={{
                               padding: '8px 0',
                               borderBottom: '1px solid rgba(255,255,255,0.1)',
@@ -3460,53 +3964,7 @@ const Projects = () => {
                         </ul>
                     </div>
 
-                      <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
-                        <button style={{
-                          background: 'linear-gradient(135deg, #dc3545 0%, #fd7e14 100%)',
-                          color: 'white',
-                          border: 'none',
-                          padding: '12px 24px',
-                          borderRadius: '25px',
-                          fontSize: '14px',
-                          fontWeight: '600',
-                          cursor: 'pointer',
-                          boxShadow: '0 8px 20px rgba(220, 53, 69, 0.3)',
-                          transition: 'all 0.3s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'translateY(-2px)';
-                          e.currentTarget.style.boxShadow = '0 12px 25px rgba(220, 53, 69, 0.4)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'translateY(0)';
-                          e.currentTarget.style.boxShadow = '0 8px 20px rgba(220, 53, 69, 0.3)';
-                        }}
-                        >
-                          Download App
-                        </button>
-                        <button style={{
-                          background: 'transparent',
-                          color: '#dc3545',
-                          border: '2px solid #dc3545',
-                          padding: '10px 22px',
-                          borderRadius: '25px',
-                          fontSize: '14px',
-                          fontWeight: '600',
-                          cursor: 'pointer',
-                          transition: 'all 0.3s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = '#dc3545';
-                          e.currentTarget.style.color = 'white';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'transparent';
-                          e.currentTarget.style.color = '#dc3545';
-                        }}
-                        >
-                          Learn More
-                        </button>
-                  </div>
+                      {/* Desktop Apps CTA buttons removed per request */}
                     </div>
                     
                     {/* Desktop Monitor Mockup */}
@@ -3525,7 +3983,7 @@ const Projects = () => {
                         transformStyle: 'preserve-3d',
                         transition: 'all 0.3s ease',
                         cursor: 'pointer',
-                        paddingBottom: '80px'
+                        paddingBottom: '10px'
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1.08)';
@@ -3543,8 +4001,8 @@ const Projects = () => {
                           background: 'linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 15%, #1a1a1a 30%, #0f0f0f 50%, #1a1a1a 70%, #2a2a2a 85%, #3a3a3a 100%)',
                           borderRadius: '30px',
                           position: 'relative',
-                          boxShadow: '0 25px 80px rgba(0,0,0,0.4), 0 0 0 3px rgba(255,255,255,0.15), inset 0 2px 8px rgba(255,255,255,0.1), inset 0 -2px 8px rgba(0,0,0,0.3)',
-                          border: '3px solid rgba(255,255,255,0.15)',
+                          boxShadow: '0 25px 80px rgba(0,0,0,0.4), 0 0 0 2px rgba(255,255,255,0.1), inset 0 2px 8px rgba(255,255,255,0.1), inset 0 -2px 8px rgba(0,0,0,0.3)',
+                          border: '2px solid rgba(255,255,255,0.1)',
                           overflow: 'visible',
                           transform: 'translateZ(0)',
                           backdropFilter: 'blur(10px)'
@@ -3554,31 +4012,30 @@ const Projects = () => {
                             position: 'absolute',
                             bottom: '-45px',
                             left: '50%',
-                            transform: 'translateX(-50%)',
+                            transform: 'translateX(-50%) translateZ(0)',
                             width: '180px',
                             height: '45px',
                             background: 'linear-gradient(145deg, #f5f5f5 0%, #e8e8e8 10%, #d8d8d8 25%, #c8c8c8 40%, #b8b8b8 55%, #a8a8a8 70%, #989898 85%, #888888 100%)',
                             borderRadius: '25px 25px 0 0',
                             boxShadow: '0 15px 40px rgba(0,0,0,0.3), inset 0 3px 6px rgba(255,255,255,0.6), inset 0 -3px 6px rgba(0,0,0,0.3), 0 0 0 2px rgba(255,255,255,0.2)',
                             zIndex: 1,
-                            border: '3px solid rgba(255,255,255,0.4)',
-                            borderBottom: 'none',
-                            transform: 'translateX(-50%) translateZ(0)'
+                            border: '2px solid rgba(255,255,255,0.2)',
+                            borderBottom: 'none'
                           }}></div>
                           
                           {/* Monitor Base */}
                           <div className="monitor-base" style={{
                             position: 'absolute',
-                            bottom: '-90px',
+                            bottom: '-95px',
                             left: '50%',
                             transform: 'translateX(-50%)',
                             width: '360px',
-                            height: '50px',
+                            height: '55px',
                             background: 'linear-gradient(145deg, #f8f8f8 0%, #f0f0f0 8%, #e8e8e8 16%, #e0e0e0 24%, #d8d8d8 32%, #d0d0d0 40%, #c8c8c8 48%, #c0c0c0 56%, #b8b8b8 64%, #b0b0b0 72%, #a8a8a8 80%, #a0a0a0 88%, #989898 96%, #909090 100%)',
                             borderRadius: '30px',
                             boxShadow: '0 20px 50px rgba(0,0,0,0.4), inset 0 4px 8px rgba(255,255,255,0.7), inset 0 -4px 8px rgba(0,0,0,0.4), 0 0 0 2px rgba(255,255,255,0.2)',
-                            border: '3px solid rgba(255,255,255,0.5)',
-                            borderTop: '2px solid rgba(255,255,255,0.7)',
+                            border: '2px solid rgba(255,255,255,0.3)',
+                            borderTop: '1px solid rgba(255,255,255,0.4)',
                             zIndex: 0
                           }}></div>
                           
@@ -3591,7 +4048,7 @@ const Projects = () => {
                             margin: '35px auto 0',
                             position: 'relative',
                             overflow: 'hidden',
-                            border: '4px solid rgba(0,0,0,0.6)',
+                            border: '2px solid rgba(0,0,0,0.3)',
                             boxShadow: 'inset 0 0 40px rgba(0,0,0,0.9), inset 0 0 0 3px rgba(255,255,255,0.15), 0 0 20px rgba(0,0,0,0.5)',
                             transform: 'translateZ(0)'
                           }}>
@@ -3688,10 +4145,13 @@ const Projects = () => {
                                   opacity: currentScreenIndex === 0 ? 1 : 0,
                                   overflow: 'hidden'
                                 }}>
-                                  {projects.desktop[currentAppIndex]?.mockupImages ? (
+                                  {projects.desktop[currentDesktopAppIndex]?.mockupImages ? (
                                     <img 
-                                      src={projects.desktop[currentAppIndex].mockupImages[0]} 
-                                      alt={projects.desktop[currentAppIndex]?.title || "Desktop Application"}
+                                      src={projects.desktop[currentDesktopAppIndex].mockupImages[0]} 
+                                      alt={projects.desktop[currentDesktopAppIndex]?.title || "Desktop Application"}
+                                      loading="lazy"
+                                      decoding="async"
+                                      onLoad={handleImageLoad}
                                       style={{
                                         width: '100%',
                                         height: '100%',
@@ -3729,10 +4189,13 @@ const Projects = () => {
                                   opacity: currentScreenIndex === 1 ? 1 : 0,
                                   overflow: 'hidden'
                                 }}>
-                                  {projects.desktop[currentAppIndex]?.mockupImages ? (
+                                  {projects.desktop[currentDesktopAppIndex]?.mockupImages ? (
                                     <img 
-                                      src={projects.desktop[currentAppIndex].mockupImages[1] || projects.desktop[currentAppIndex].mockupImages[0]} 
-                                      alt={projects.desktop[currentAppIndex]?.title || "Desktop Application"}
+                                      src={projects.desktop[currentDesktopAppIndex].mockupImages[1] || projects.desktop[currentDesktopAppIndex].mockupImages[0]} 
+                                      alt={projects.desktop[currentDesktopAppIndex]?.title || "Desktop Application"}
+                                      loading="lazy"
+                                      decoding="async"
+                                      onLoad={handleImageLoad}
                                       style={{
                                         width: '100%',
                                         height: '100%',
@@ -3832,10 +4295,13 @@ const Projects = () => {
                                       overflow: 'hidden',
                                       position: 'relative'
                                     }}>
-                                      {projects.desktop[currentAppIndex]?.mockupImages ? (
+                                      {projects.desktop[currentDesktopAppIndex]?.mockupImages ? (
                                         <img 
-                                          src={projects.desktop[currentAppIndex].mockupImages[1] || projects.desktop[currentAppIndex].mockupImages[0]} 
-                                          alt={projects.desktop[currentAppIndex]?.title || "Desktop Application"}
+                                          src={projects.desktop[currentDesktopAppIndex].mockupImages[1] || projects.desktop[currentDesktopAppIndex].mockupImages[0]} 
+                                          alt={projects.desktop[currentDesktopAppIndex]?.title || "Desktop Application"}
+                                          loading="lazy"
+                                          decoding="async"
+                                          onLoad={handleImageLoad}
                                           style={{
                                             width: '100%',
                                             height: '100%',
@@ -3893,10 +4359,13 @@ const Projects = () => {
                                   background: 'linear-gradient(135deg, #fff 0%, #f8f9fa 100%)',
                                   overflow: 'hidden'
                                 }}>
-                                  {projects.desktop[currentAppIndex]?.mockupImages ? (
+                                  {projects.desktop[currentDesktopAppIndex]?.mockupImages ? (
                                     <img 
-                                      src={projects.desktop[currentAppIndex].mockupImages[2] || projects.desktop[currentAppIndex].mockupImages[0]} 
-                                      alt={projects.desktop[currentAppIndex]?.title || "Desktop Application"}
+                                      src={projects.desktop[currentDesktopAppIndex].mockupImages[2] || projects.desktop[currentDesktopAppIndex].mockupImages[0]} 
+                                      loading="lazy"
+                                      decoding="async"
+                                      alt={projects.desktop[currentDesktopAppIndex]?.title || "Desktop Application"}
+                                      onLoad={handleImageLoad}
                                       style={{
                                         width: '100%',
                                         height: '100%',
@@ -3932,7 +4401,7 @@ const Projects = () => {
                                     position: 'relative'
                                   }}>
                                     <h1 style={{ fontSize: '16px', marginBottom: '5px', fontWeight: 'bold' }}>
-                                      {projects.desktop[currentAppIndex]?.title || "Desktop Application"}
+                                      {projects.desktop[currentDesktopAppIndex]?.title || "Desktop Application"}
                                     </h1>
                                     <p style={{ fontSize: '8px', opacity: 0.9 }}>
                                       Analytics View
@@ -4015,10 +4484,13 @@ const Projects = () => {
                                       overflow: 'hidden',
                                       position: 'relative'
                                     }}>
-                                      {projects.desktop[currentAppIndex]?.mockupImages ? (
+                                      {projects.desktop[currentDesktopAppIndex]?.mockupImages ? (
                                         <img 
-                                          src={projects.desktop[currentAppIndex].mockupImages[2] || projects.desktop[currentAppIndex].mockupImages[0]} 
-                                          alt={projects.desktop[currentAppIndex]?.title || "Desktop Application"}
+                                          src={projects.desktop[currentDesktopAppIndex].mockupImages[2] || projects.desktop[currentDesktopAppIndex].mockupImages[0]} 
+                                          loading="lazy"
+                                          decoding="async"
+                                          alt={projects.desktop[currentDesktopAppIndex]?.title || "Desktop Application"}
+                                          onLoad={handleImageLoad}
                                           style={{
                                             width: '100%',
                                             height: '100%',
@@ -4070,18 +4542,18 @@ const Projects = () => {
                     </div>
                   </div>
 
-                  {/* Navigation Controls */}
-                  <div style={{
+                  {/* Desktop Navigation Controls */}
+                  <div className="desktop-navigation" style={{
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
                     gap: '25px',
-                    marginTop: '20px',
-                    marginBottom: '30px',
-                    padding: '25px 0'
+                    marginTop: '10px',
+                    marginBottom: '0px',
+                    padding: '20px 0 0 0'
                   }}>
                     <button
-                      onClick={() => setCurrentAppIndex((prev) => (prev - 1 + projects.desktop.length) % projects.desktop.length)}
+                      onClick={() => setCurrentDesktopAppIndex((prev) => (prev - 1 + projects.desktop.length) % projects.desktop.length)}
                       style={{
                         background: 'linear-gradient(135deg, #dc3545 0%, #fd7e14 100%)',
                         color: 'white',
@@ -4094,42 +4566,42 @@ const Projects = () => {
                         justifyContent: 'center',
                         fontSize: '1.2rem',
                         cursor: 'pointer',
-                        boxShadow: '0 10px 25px rgba(220, 53, 69, 0.3)',
-                        transition: 'all 0.3s ease'
+                        transition: 'all 0.3s ease',
+                        boxShadow: '0 8px 25px rgba(220, 53, 69, 0.3)'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.1)';
-                        e.currentTarget.style.boxShadow = '0 15px 35px rgba(220, 53, 69, 0.5)';
+                        e.target.style.transform = 'translateY(-2px)';
+                        e.target.style.boxShadow = '0 12px 35px rgba(220, 53, 69, 0.4)';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'scale(1)';
-                        e.currentTarget.style.boxShadow = '0 10px 25px rgba(220, 53, 69, 0.3)';
+                        e.target.style.transform = 'translateY(0)';
+                        e.target.style.boxShadow = '0 8px 25px rgba(220, 53, 69, 0.3)';
                       }}
                     >
                       ←
                     </button>
-                    
+
                     <div className="d-flex gap-2 dots">
                       {projects.desktop.map((_, index) => (
                         <div
                           key={index}
-                          onClick={() => setCurrentAppIndex(index)}
+                          onClick={() => setCurrentDesktopAppIndex(index)}
                           style={{
-                            width: index === currentAppIndex ? '30px' : '10px',
+                            width: '10px',
                             height: '10px',
-                            borderRadius: '5px',
-                            background: index === currentAppIndex 
-                              ? 'linear-gradient(135deg, #dc3545 0%, #fd7e14 100%)' 
+                            borderRadius: '50%',
+                            background: index === currentDesktopAppIndex
+                              ? 'linear-gradient(135deg, #dc3545 0%, #fd7e14 100%)'
                               : 'rgba(220, 53, 69, 0.3)',
                             cursor: 'pointer',
                             transition: 'all 0.3s ease'
                           }}
                         />
                       ))}
-                  </div>
-                    
+                    </div>
+
                     <button
-                      onClick={() => setCurrentAppIndex((prev) => (prev + 1) % projects.desktop.length)}
+                      onClick={() => setCurrentDesktopAppIndex((prev) => (prev + 1) % projects.desktop.length)}
                       style={{
                         background: 'linear-gradient(135deg, #dc3545 0%, #fd7e14 100%)',
                         color: 'white',
@@ -4142,16 +4614,16 @@ const Projects = () => {
                         justifyContent: 'center',
                         fontSize: '1.2rem',
                         cursor: 'pointer',
-                        boxShadow: '0 10px 25px rgba(220, 53, 69, 0.3)',
-                        transition: 'all 0.3s ease'
+                        transition: 'all 0.3s ease',
+                        boxShadow: '0 8px 25px rgba(220, 53, 69, 0.3)'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.1)';
-                        e.currentTarget.style.boxShadow = '0 15px 35px rgba(220, 53, 69, 0.5)';
+                        e.target.style.transform = 'translateY(-2px)';
+                        e.target.style.boxShadow = '0 12px 35px rgba(220, 53, 69, 0.4)';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'scale(1)';
-                        e.currentTarget.style.boxShadow = '0 10px 25px rgba(220, 53, 69, 0.3)';
+                        e.target.style.transform = 'translateY(0)';
+                        e.target.style.boxShadow = '0 8px 25px rgba(220, 53, 69, 0.3)';
                       }}
                     >
                       →
@@ -4178,9 +4650,12 @@ const Projects = () => {
           {selectedProject && (
             <div>
                 <img 
-                  src={selectedProject.image} 
+                  src={selectedProject.image}
+                  onLoad={handleImageLoad} 
                   alt={selectedProject.title}
-                className="img-fluid rounded mb-4"
+                  className="img-fluid rounded mb-4"
+                  loading="lazy"
+                  decoding="async"
                   style={{ width: '100%', height: '300px', objectFit: 'cover' }}
                 />
               <p className="mb-4">{selectedProject.description}</p>
@@ -4230,13 +4705,7 @@ const Projects = () => {
                 <FaExternalLinkAlt className="me-2" />
             View Live
           </Button>
-          <Button 
-            variant="outline-primary" 
-            onClick={() => window.open(selectedProject?.links.github, '_blank')}
-          >
-            <FaGithub className="me-2" />
-            View Code
-              </Button>
+          {/* Modal View Code button removed per request */}
             </Modal.Footer>
       </Modal>
       </section>

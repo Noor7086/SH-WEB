@@ -1,22 +1,49 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-// Components
+// Critical components - load immediately
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import About from './components/About';
-import Services from './components/Services';
-import Team from './components/Team';
-import Projects from './components/Projects';
-import OurWork from './components/OurWork';
-// import Reviews from './components/Reviews';
-import Achievements from './components/Achievements';
-import Contact from './components/Contact';
 import Footer from './components/Footer';
+
+// Lazy load heavy components for better performance
+const About = lazy(() => import('./components/About'));
+const Services = lazy(() => import('./components/Services'));
+const Team = lazy(() => import('./components/Team'));
+const Projects = lazy(() => import('./components/Projects'));
+const OurWork = lazy(() => import('./components/OurWork'));
+const Achievements = lazy(() => import('./components/Achievements'));
+const Contact = lazy(() => import('./components/Contact'));
+
+// Loading fallback component
+const LoadingFallback = () => (
+  <div style={{ 
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    minHeight: '200px',
+    padding: '40px'
+  }}>
+    <div style={{
+      width: '40px',
+      height: '40px',
+      border: '3px solid rgba(102, 126, 234, 0.2)',
+      borderTop: '3px solid #667eea',
+      borderRadius: '50%',
+      animation: 'spin 0.8s linear infinite'
+    }}></div>
+    <style>{`
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `}</style>
+  </div>
+);
 
 function App() {
   useEffect(() => {
@@ -36,14 +63,15 @@ function App() {
           <Route path="/" element={
             <>
               <Hero />
-              <About />
-              <Services />
-              {/* <Team /> */}
-              <Projects />
-              <OurWork isHomePage={true} />
-              {/* <Reviews /> */}
-              <Achievements />
-              <Contact />
+              <Suspense fallback={<LoadingFallback />}>
+                <About />
+                <Team />
+                <Services />
+                <Projects />
+                <OurWork isHomePage={true} />
+                <Achievements />
+                <Contact />
+              </Suspense>
             </>
           } />
         </Routes>

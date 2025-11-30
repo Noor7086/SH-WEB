@@ -66,7 +66,7 @@ const Reviews = () => {
       company: "TechStart Inc.",
       image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&h=200&fit=crop&crop=face",
       rating: 5,
-      review: "TechHouse transformed our business completely. Their e-commerce platform increased our online sales by 300% in just 6 months. The team's expertise and dedication are unmatched. They didn't just deliver a product; they delivered a solution that perfectly fits our business needs.",
+      review: "Gentrons transformed our business completely. Their e-commerce platform increased our online sales by 300% in just 6 months. The team's expertise and dedication are unmatched. They didn't just deliver a product; they delivered a solution that perfectly fits our business needs.",
       project: "E-Commerce Platform",
       results: ["300% increase in sales", "50% reduction in cart abandonment", "99.9% uptime"],
       linkedin: "#"
@@ -78,7 +78,7 @@ const Reviews = () => {
       company: "HealthCare Network",
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
       rating: 5,
-      review: "The healthcare management system developed by TechHouse exceeded all our expectations. It's not just HIPAA compliant but also incredibly user-friendly. Our staff efficiency improved by 40%, and patient satisfaction scores are at an all-time high.",
+      review: "The healthcare management system developed by Gentrons exceeded all our expectations. It's not just HIPAA compliant but also incredibly user-friendly. Our staff efficiency improved by 40%, and patient satisfaction scores are at an all-time high.",
       project: "Healthcare Management System",
       results: ["40% efficiency improvement", "100% HIPAA compliance", "95% staff satisfaction"],
       linkedin: "#"
@@ -90,7 +90,7 @@ const Reviews = () => {
       company: "Digital Bank",
       image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face",
       rating: 5,
-      review: "Our mobile banking app developed by TechHouse has been a game-changer. With 500,000+ downloads and a 4.8-star rating, it's clear our customers love it. The security features and user experience are top-notch.",
+      review: "Our mobile banking app developed by Gentrons has been a game-changer. With 500,000+ downloads and a 4.8-star rating, it's clear our customers love it. The security features and user experience are top-notch.",
       project: "FinTech Mobile App",
       results: ["500,000+ downloads", "4.8/5 app store rating", "Zero security breaches"],
       linkedin: "#"
@@ -102,7 +102,7 @@ const Reviews = () => {
       company: "Enterprise Corp",
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face",
       rating: 5,
-      review: "The cloud migration project was executed flawlessly. TechHouse managed to migrate 100+ applications with less than 1 hour of downtime. Our infrastructure costs reduced by 40%, and performance improved significantly.",
+      review: "The cloud migration project was executed flawlessly. Gentrons managed to migrate 100+ applications with less than 1 hour of downtime. Our infrastructure costs reduced by 40%, and performance improved significantly.",
       project: "Cloud Migration Solution",
       results: ["100+ applications migrated", "<1 hour downtime", "40% cost reduction"],
       linkedin: "#"
@@ -114,7 +114,7 @@ const Reviews = () => {
       company: "Smart Home Inc.",
       image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face",
       rating: 5,
-      review: "TechHouse's IoT solution revolutionized our smart home platform. The integration capabilities and user interface are exceptional. Our customers are saving 30% on energy costs, and we've achieved 98% customer satisfaction.",
+      review: "Gentrons's IoT solution revolutionized our smart home platform. The integration capabilities and user interface are exceptional. Our customers are saving 30% on energy costs, and we've achieved 98% customer satisfaction.",
       project: "IoT Smart Home System",
       results: ["30% energy savings", "98% customer satisfaction", "1,000+ devices connected"],
       linkedin: "#"
@@ -126,7 +126,7 @@ const Reviews = () => {
       company: "Tech Corporation",
       image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face",
       rating: 5,
-      review: "The AI analytics platform developed by TechHouse has given us unprecedented insights into our business operations. The predictive analytics capabilities have improved our decision-making process by 60%. Truly innovative work!",
+      review: "The AI analytics platform developed by Gentrons has given us unprecedented insights into our business operations. The predictive analytics capabilities have improved our decision-making process by 60%. Truly innovative work!",
       project: "AI-Powered Analytics Platform",
       results: ["95% prediction accuracy", "60% improved decision making", "10,000+ insights generated"],
       linkedin: "#"
@@ -149,8 +149,8 @@ const Reviews = () => {
       minHeight: 'auto',
       display: 'flex',
       alignItems: 'center',
-      paddingTop: '100px',
-      paddingBottom: '100px'
+      paddingTop: '80px',
+      paddingBottom: '80px'
     }}>
       {/* Premium Background Elements */}
       <div className="position-absolute w-100 h-100" style={{ zIndex: 1 }}>
@@ -200,14 +200,7 @@ const Reviews = () => {
           {/* Left Section - Text Content */}
           <Col lg={6} md={12} className="mb-5 mb-lg-0">
             <div className="text-content">
-              <h2 className="display-4 fw-bold mb-4" style={{
-                background: 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                lineHeight: '1.2',
-                fontSize: '3.5rem'
-              }}>
+              <h2 className="section-heading">
                 What Our 
                 <span style={{ 
                   background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -482,7 +475,7 @@ const Reviews = () => {
 
       </Container>
 
-      <style jsx>{`
+      <style>{`
         @keyframes jiggleBlob {
           0% { 
             border-radius: 45% 55% 60% 40% / 50% 45% 55% 50%;

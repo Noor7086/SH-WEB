@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Container, Row, Col } from "react-bootstrap";
+import { FaRocket } from "react-icons/fa";
 
 // Website Portfolio Assets
-import imgWeb1 from "../assets/Website_Portfolio/web1.webp";
-import imgWeb2 from "../assets/Website_Portfolio/web2.webp";
-import imgWeb3 from "../assets/Website_Portfolio/web3.webp";
 import imgWeb4 from "../assets/Website_Portfolio/web4.webp";
-import imgWeb5 from "../assets/Website_Portfolio/web5.webp";
-import imgWeb6 from "../assets/Website_Portfolio/web6.webp";
-import imgWeb7 from "../assets/Website_Portfolio/web7.webp";
 import imgWeb8 from "../assets/Website_Portfolio/web8.webp";
-import imgWeb9 from "../assets/Website_Portfolio/evvixafk5uxh3mswenmu.webp";
-import imgWeb10 from "../assets/Website_Portfolio/gmwndtlyvsiqeupvrtvy.webp";
-import imgWeb11 from "../assets/Website_Portfolio/heulngkjcvew0yvxw0wo.webp";
-import imgWeb12 from "../assets/Website_Portfolio/vqzl4mgvv3vbuffeqzsz.webp";
+import imgWeb9 from "../assets/Website_Portfolio/web9.webp";
+import imgWeb10 from "../assets/Website_Portfolio/web10.webp";
+import imgWeb11 from "../assets/Website_Portfolio/web11.webp";
+import imgWeb12 from "../assets/Website_Portfolio/web12.webp";
+import imgWeb13 from "../assets/weflex.png";
+import imgWeb14 from "../assets/american.png";
+import imgWeb15 from "../assets/museum.png";
+import imgWeb16 from "../assets/tidyspaces.png";
+import imgWeb17 from "../assets/art.png";
+import imgWeb18 from "../assets/ajmartpk.png";
 
 // Logo Portfolio Assets
 import imgLogo1 from "../assets/logo-portfolio/logo1.webp";
@@ -83,13 +84,13 @@ const TABS = [
 
 const WORKS = {
   web: [
-    { id: 1, img: imgWeb1 },
-    { id: 2, img: imgWeb2 },
-    { id: 3, img: imgWeb3 },
+    { id: 1, img: imgWeb13 },
+    { id: 2, img: imgWeb14 },
+    { id: 3, img: imgWeb15 },
     { id: 4, img: imgWeb4 },
-    { id: 5, img: imgWeb5 },
-    { id: 6, img: imgWeb6 },
-    { id: 7, img: imgWeb7 },
+    { id: 5, img: imgWeb17 },
+    { id: 6, img: imgWeb18 },
+    { id: 7, img: imgWeb16 },
     { id: 8, img: imgWeb8 },
     { id: 9, img: imgWeb9 },
     { id: 10, img: imgWeb10 },
@@ -166,94 +167,86 @@ const OurWork = ({ isHomePage = false }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Reset visible counts on tab change
+  // Reset visible counts on tab change - Optimized to reduce re-renders
   useEffect(() => {
-    if (isMobile) {
-      if (activeTab === 'web') setWebVisibleCount(4);
-      if (activeTab === 'logo') setLogoVisibleCount(4);
-      if (activeTab === 'branding') setBrandingVisibleCount(4);
-      if (activeTab === 'motion') setMotionVisibleCount(4);
-      if (activeTab === 'appdev') setAppdevVisibleCount(4);
-    } else {
-      // For home page, show 8 items, for portfolio page show 8 items
-      const defaultCount = 8;
-      if (activeTab === 'web') setWebVisibleCount(defaultCount);
-      if (activeTab === 'logo') setLogoVisibleCount(defaultCount);
-      if (activeTab === 'branding') setBrandingVisibleCount(defaultCount);
-      if (activeTab === 'motion') setMotionVisibleCount(defaultCount);
-      if (activeTab === 'appdev') setAppdevVisibleCount(defaultCount);
-    }
-  }, [activeTab, isMobile, isHomePage]);
+    const defaultCount = isMobile ? 4 : 8;
+    // Batch all state updates together
+    if (activeTab === 'web') setWebVisibleCount(defaultCount);
+    if (activeTab === 'logo') setLogoVisibleCount(defaultCount);
+    if (activeTab === 'branding') setBrandingVisibleCount(defaultCount);
+    if (activeTab === 'motion') setMotionVisibleCount(defaultCount);
+    if (activeTab === 'appdev') setAppdevVisibleCount(defaultCount);
+  }, [activeTab, isMobile]);
 
-  // Animation variants
-  const containerVariants = {
+  // Memoize animation variants to prevent recreation on every render - Optimized for speed
+  const containerVariants = useMemo(() => ({
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1,
+        staggerChildren: 0.02,
+        delayChildren: 0,
       },
     },
-  };
+  }), []);
 
-  const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
+  const itemVariants = useMemo(() => ({
+    hidden: { y: isMobile ? 5 : 10, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        duration: 0.6,
+        duration: isMobile ? 0.15 : 0.2,
         ease: [0.23, 1, 0.32, 1],
       },
     },
-  };
+  }), [isMobile]);
 
-  const tabVariants = {
-    hidden: { y: 20, opacity: 0 },
+  const tabVariants = useMemo(() => ({
+    hidden: { y: 10, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        duration: 0.5,
+        duration: 0.2,
         ease: [0.23, 1, 0.32, 1],
       },
     },
     hover: {
       scale: 1.05,
-      transition: { duration: 0.2 },
+      transition: { duration: 0.15 },
     },
     tap: {
       scale: 0.95,
     },
-  };
+  }), []);
 
-  const galleryVariants = {
+  const galleryVariants = useMemo(() => ({
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
+        staggerChildren: 0.01,
+        delayChildren: 0,
       },
     },
-  };
+  }), []);
 
-  const imageVariants = {
-    hidden: { scale: 0.8, opacity: 0 },
+  const imageVariants = useMemo(() => ({
+    hidden: { scale: 0.98, opacity: 0 },
     visible: {
       scale: 1,
       opacity: 1,
       transition: {
-        duration: 0.6,
+        duration: 0.2,
         ease: [0.23, 1, 0.32, 1],
       },
     },
-    hover: {
+    hover: isMobile ? {} : {
       scale: 1.05,
-      transition: { duration: 0.3 },
+      transition: { duration: 0.2 },
     },
-  };
+  }), [isMobile]);
 
   const modalVariants = {
     hidden: {
@@ -270,39 +263,30 @@ const OurWork = ({ isHomePage = false }) => {
     },
   };
 
-  // Show only a limited number for each tab
-  let imagesToShow = [];
-  if (isMobile) {
-    if (activeTab === "web") {
-      imagesToShow = WORKS.web.slice(0, webVisibleCount);
-    } else if (activeTab === "logo") {
-      imagesToShow = WORKS.logo.slice(0, logoVisibleCount);
-    } else if (activeTab === "branding") {
-      imagesToShow = WORKS.branding.slice(0, brandingVisibleCount);
-    } else if (activeTab === "motion") {
-      imagesToShow = WORKS.motion.slice(0, motionVisibleCount);
-    } else if (activeTab === "appdev") {
-      imagesToShow = WORKS.appdev.slice(0, appdevVisibleCount);
-    }
-  } else {
-    if (activeTab === "web") {
-      imagesToShow = WORKS.web.slice(0, webVisibleCount);
-    } else if (activeTab === "logo") {
-      imagesToShow = WORKS.logo.slice(0, logoVisibleCount);
-    } else if (activeTab === "branding") {
-      imagesToShow = WORKS.branding.slice(0, brandingVisibleCount);
-    } else if (activeTab === "motion") {
-      imagesToShow = WORKS.motion.slice(0, motionVisibleCount);
-    } else if (activeTab === "appdev") {
-      imagesToShow = WORKS.appdev.slice(0, appdevVisibleCount);
-    }
-  }
+  // Memoize images to show - only recalculate when dependencies change
+  const imagesToShow = useMemo(() => {
+    const counts = {
+      web: webVisibleCount,
+      logo: logoVisibleCount,
+      branding: brandingVisibleCount,
+      motion: motionVisibleCount,
+      appdev: appdevVisibleCount
+    };
+    
+    const works = WORKS[activeTab] || [];
+    return works.slice(0, counts[activeTab] || 8);
+  }, [activeTab, webVisibleCount, logoVisibleCount, brandingVisibleCount, motionVisibleCount, appdevVisibleCount]);
 
-  const handleImgClick = (img) => {
+  const handleImgClick = useCallback((img) => {
     const idx = WORKS[activeTab].findIndex((w) => w.img === img);
     setModalImgIdx(idx);
     setSelectedImg(img);
     setShowImgModal(true);
+  }, [activeTab]);
+
+  const handleImageError = (e) => {
+    console.error("Image failed to load:", e.target.src);
+    e.target.style.display = 'none';
   };
 
   const closeImgModal = () => {
@@ -310,6 +294,18 @@ const OurWork = ({ isHomePage = false }) => {
     setSelectedImg(null);
     setModalImgIdx(null);
   };
+
+  // Close modal on ESC key
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.keyCode === 27) {
+        if (showImgModal) closeImgModal();
+        if (showVideoModal) setShowVideoModal(false);
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [showImgModal, showVideoModal]);
 
   const handlePrevImg = (e) => {
     e.stopPropagation();
@@ -332,28 +328,115 @@ const OurWork = ({ isHomePage = false }) => {
   return (
     <>
       <motion.section
+        id="ourwork"
         className={`ourwork-section ${isHomePage ? 'home-ourwork' : ''}`}
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: true, amount: isMobile ? 0.1 : 0.2 }}
+        style={{
+          paddingTop: isMobile ? '10px' : '30px',
+          paddingBottom: '10px',
+          marginTop: isMobile ? '20px' : '40px',
+          position: 'relative',
+          overflow: 'visible'
+        }}
       >
-        <Container>
+        {/* Light Particles Background */}
+        <div className="position-absolute" style={{
+          top: '10%',
+          left: '5%',
+          width: '200px',
+          height: '200px',
+          background: 'radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%)',
+          borderRadius: '50%',
+          animation: 'float 6s ease-in-out infinite',
+          zIndex: 0
+        }}></div>
+        
+        <div className="position-absolute" style={{
+          top: '20%',
+          right: '10%',
+          width: '150px',
+          height: '150px',
+          background: 'radial-gradient(circle, rgba(118, 75, 162, 0.1) 0%, transparent 70%)',
+          borderRadius: '50%',
+          animation: 'float 8s ease-in-out infinite reverse',
+          zIndex: 0
+        }}></div>
+        
+        <div className="position-absolute" style={{
+          bottom: '15%',
+          left: '15%',
+          width: '100px',
+          height: '100px',
+          background: 'radial-gradient(circle, rgba(102, 126, 234, 0.08) 0%, transparent 70%)',
+          borderRadius: '50%',
+          animation: 'float 7s ease-in-out infinite',
+          zIndex: 0
+        }}></div>
+
+        <Container style={{ position: 'relative', zIndex: 1 }}>
           <Row className="justify-content-center">
             <Col lg={8} className="text-center">
+              <motion.div
+                className="premium-badge"
+                variants={itemVariants}
+                style={{
+                  display: 'inline-block',
+                  padding: '12px 24px',
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  borderRadius: '10px',
+                  boxShadow: '0 8px 25px rgba(102, 126, 234, 0.3)',
+                  border: '2px solid rgba(255,255,255,0.2)',
+                  backdropFilter: 'blur(10px)',
+                  marginBottom: '20px'
+                }}
+              >
+                <FaRocket style={{ 
+                  color: 'white', 
+                  marginRight: '8px',
+                  fontSize: '1.2rem'
+                }} />
+                <span style={{ 
+                  color: 'white', 
+                  fontWeight: '600',
+                  fontSize: '1rem'
+                }}>
+                  Our Work
+                </span>
+              </motion.div>
+              
               <motion.h2 
-                className="display-4 fw-bold" 
-                style={{ 
-                  color: '#2c3e50',
+                style={{
                   fontSize: '3rem',
-                  textShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                  letterSpacing: '-0.02em',
+                  fontWeight: '800',
+                  marginBottom: '1.5rem',
+                  background: 'linear-gradient(135deg, #1a1a2e 0%, #667eea 50%, #764ba2 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
                   lineHeight: '1.2'
                 }}
                 variants={itemVariants}
               >
                 Our Work
               </motion.h2>
+              
+              <motion.p 
+                style={{
+                  fontSize: '0.9rem',
+                  color: '#6c757d',
+                  lineHeight: '1.6',
+                  maxWidth: '600px',
+                  margin: '0 auto',
+                  fontWeight: '400'
+                }}
+                variants={itemVariants}
+              >
+                Discover our creative portfolio showcasing innovative projects across web development, 
+                mobile apps, graphic design, and motion graphics.
+              </motion.p>
             </Col>
           </Row>
           
@@ -370,8 +453,9 @@ const OurWork = ({ isHomePage = false }) => {
                     key={tab.key}
                     className={`ourwork-tab${activeTab === tab.key ? " active" : ""}`}
                     onClick={() => {
+                      // Immediate state update for instant response
                       setActiveTab(tab.key);
-                      // Always show 8 items for both home and portfolio pages
+                      // Batch state updates
                       if (tab.key === "web") setWebVisibleCount(8);
                       if (tab.key === "logo") setLogoVisibleCount(8);
                       if (tab.key === "branding") setBrandingVisibleCount(8);
@@ -381,6 +465,10 @@ const OurWork = ({ isHomePage = false }) => {
                     variants={tabVariants}
                     whileHover="hover"
                     whileTap="tap"
+                    style={{ 
+                      transition: 'all 0.2s ease',
+                      willChange: 'transform'
+                    }}
                   >
                     {tab.label}
                   </motion.button>
@@ -393,9 +481,11 @@ const OurWork = ({ isHomePage = false }) => {
             <Col lg={12}>
               <motion.div
                 className="ourwork-gallery"
+                key={activeTab}
                 variants={galleryVariants}
                 initial="hidden"
                 animate="visible"
+                transition={{ duration: 0.2 }}
               >
           {isMobile ? (
             <>
@@ -404,10 +494,10 @@ const OurWork = ({ isHomePage = false }) => {
                   className="ourwork-mobile-grid"
                   style={{
                     display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: 12,
+                    gridTemplateColumns: '1fr',
+                    gap: 16,
                     width: '100%',
-                    maxWidth: 420,
+                    maxWidth: 520,
                     margin: '0 auto',
                   }}
                 >
@@ -417,7 +507,7 @@ const OurWork = ({ isHomePage = false }) => {
                       key={work.id}
                       variants={imageVariants}
                       whileHover="hover"
-                      style={{ width: '100%', maxWidth: 220, margin: '0 auto' }}
+                      style={{ width: '100%', maxWidth: 300, margin: '0 auto' }}
                     >
                       <div
                         className="ourwork-img-container"
@@ -436,6 +526,8 @@ const OurWork = ({ isHomePage = false }) => {
                           <img
                             src={work.poster}
                             alt="Motion Poster"
+                            loading="lazy"
+                            decoding="async"
                             style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 16, cursor: 'pointer' }}
                             onClick={() => { setShowVideoModal(work.id); }}
                           />
@@ -443,6 +535,8 @@ const OurWork = ({ isHomePage = false }) => {
                           <img
                             src={work.img}
                             alt="App Development Work"
+                            loading="lazy"
+                            decoding="async"
                             style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 16, cursor: 'pointer' }}
                             onClick={() => handleImgClick(work.img)}
                           />
@@ -451,6 +545,9 @@ const OurWork = ({ isHomePage = false }) => {
                             src={work.img}
                             alt={activeTab === "logo" ? "Logo Work" : "Website Work"}
                             className="ourwork-img"
+                            loading="lazy"
+                            decoding="async"
+                            onError={handleImageError}
                             onClick={() => handleImgClick(work.img)}
                             style={{
                               cursor: 'pointer',
@@ -492,6 +589,8 @@ const OurWork = ({ isHomePage = false }) => {
                     <img
                       src={work.poster}
                       alt="Motion Poster"
+                      loading="lazy"
+                      decoding="async"
                       style={{ width: '100%', maxHeight: 650, objectFit: 'contain', borderRadius: 12, cursor: 'pointer' }}
                       onClick={() => { setShowVideoModal(work.id); }}
                     />
@@ -499,6 +598,8 @@ const OurWork = ({ isHomePage = false }) => {
                     <img
                       src={work.img}
                       alt="App Development Work"
+                      loading="lazy"
+                      decoding="async"
                       style={{ width: '100%', maxHeight: 650, objectFit: 'contain', borderRadius: 12, cursor: 'pointer' }}
                       onClick={() => handleImgClick(work.img)}
                     />
@@ -507,6 +608,9 @@ const OurWork = ({ isHomePage = false }) => {
                       src={work.img}
                       alt={activeTab === "logo" ? "Logo Work" : "Website Work"}
                       className="ourwork-img"
+                      loading="lazy"
+                      decoding="async"
+                      onError={handleImageError}
                       onClick={() => handleImgClick(work.img)}
                       style={{
                         cursor: "pointer",
@@ -591,20 +695,72 @@ const OurWork = ({ isHomePage = false }) => {
           <motion.div
             className="modal-content"
             style={{ 
-              maxWidth: 500, 
-              maxHeight: 600, 
+              maxWidth: isMobile ? '95vw' : '500px', 
+              maxHeight: isMobile ? '90vh' : '600px', 
               padding: 0, 
               overflow: "hidden",
               display: "flex",
-              flexDirection: "column"
+              flexDirection: "column",
+              position: 'relative'
             }}
             onClick={(e) => e.stopPropagation()}
             variants={modalVariants}
             initial="hidden"
             animate="visible"
           >
-            <div className="modal-header">
-              <button className="modal-close" onClick={closeImgModal}>
+            <div className="modal-header" style={{
+              position: 'absolute',
+              top: isMobile ? '5px' : '10px',
+              right: isMobile ? '5px' : '10px',
+              zIndex: 1001
+            }}>
+              <button 
+                className="modal-close" 
+                onClick={closeImgModal}
+                style={{
+                  background: '#fff',
+                  color: '#333',
+                  border: '2px solid rgba(0, 0, 0, 0.2)',
+                  width: isMobile ? '50px' : '45px',
+                  height: isMobile ? '50px' : '45px',
+                  borderRadius: '50%',
+                  fontSize: isMobile ? '32px' : '28px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                  fontWeight: 'bold',
+                  zIndex: 1002,
+                  lineHeight: 1,
+                  padding: 0,
+                  margin: 0
+                }}
+                onMouseEnter={(e) => {
+                  if (!isMobile) {
+                    e.target.style.background = '#fff';
+                    e.target.style.transform = 'scale(1.1)';
+                    e.target.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.4)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isMobile) {
+                    e.target.style.background = '#fff';
+                    e.target.style.transform = 'scale(1)';
+                    e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+                  }
+                }}
+                onTouchStart={(e) => {
+                  e.target.style.background = '#f0f0f0';
+                  e.target.style.transform = 'scale(0.95)';
+                }}
+                onTouchEnd={(e) => {
+                  e.target.style.background = '#fff';
+                  e.target.style.transform = 'scale(1)';
+                }}
+                title="Close"
+              >
                 ×
               </button>
             </div>
@@ -634,6 +790,8 @@ const OurWork = ({ isHomePage = false }) => {
                     key={work.id}
                     src={work.img}
                     alt="Work"
+                    loading={idx === modalImgIdx ? "eager" : "lazy"}
+                    decoding="async"
                     style={{
                       maxWidth: "100%",
                       height: "auto",
@@ -660,14 +818,71 @@ const OurWork = ({ isHomePage = false }) => {
         >
           <motion.div
             className="modal-content"
-            style={{ maxWidth: 400, padding: 0, overflow: "hidden" }}
+            style={{ 
+              maxWidth: isMobile ? '95vw' : '400px', 
+              maxHeight: isMobile ? '90vh' : 'auto',
+              padding: 0, 
+              overflow: "hidden",
+              position: 'relative'
+            }}
             onClick={e => e.stopPropagation()}
             variants={modalVariants}
             initial="hidden"
             animate="visible"
           >
-            <div className="modal-header">
-              <button className="modal-close" onClick={() => setShowVideoModal(false)}>
+            <div className="modal-header" style={{
+              position: 'absolute',
+              top: isMobile ? '5px' : '10px',
+              right: isMobile ? '5px' : '10px',
+              zIndex: 1001
+            }}>
+              <button 
+                className="modal-close" 
+                onClick={() => setShowVideoModal(false)}
+                style={{
+                  background: '#fff',
+                  color: '#333',
+                  border: '2px solid rgba(0, 0, 0, 0.2)',
+                  width: isMobile ? '50px' : '45px',
+                  height: isMobile ? '50px' : '45px',
+                  borderRadius: '50%',
+                  fontSize: isMobile ? '32px' : '28px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                  fontWeight: 'bold',
+                  zIndex: 1002,
+                  lineHeight: 1,
+                  padding: 0,
+                  margin: 0
+                }}
+                onMouseEnter={(e) => {
+                  if (!isMobile) {
+                    e.target.style.background = '#fff';
+                    e.target.style.transform = 'scale(1.1)';
+                    e.target.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.4)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isMobile) {
+                    e.target.style.background = '#fff';
+                    e.target.style.transform = 'scale(1)';
+                    e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+                  }
+                }}
+                onTouchStart={(e) => {
+                  e.target.style.background = '#f0f0f0';
+                  e.target.style.transform = 'scale(0.95)';
+                }}
+                onTouchEnd={(e) => {
+                  e.target.style.background = '#fff';
+                  e.target.style.transform = 'scale(1)';
+                }}
+                title="Close"
+              >
                 ×
               </button>
             </div>
@@ -675,6 +890,7 @@ const OurWork = ({ isHomePage = false }) => {
               <video
                 src={WORKS.motion.find(v => v.id === showVideoModal).video}
                 poster={WORKS.motion.find(v => v.id === showVideoModal).poster}
+                preload="metadata"
                 style={{ width: '100%', maxHeight: 650, objectFit: 'contain', borderRadius: 12 }}
                 controls
                 muted
@@ -687,6 +903,35 @@ const OurWork = ({ isHomePage = false }) => {
           </motion.div>
         </motion.div>
       )}
+      
+      <style>{`
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+          .ourwork-section {
+            padding-top: 10px !important;
+            padding-bottom: 80px !important;
+            margin-top: 20px !important;
+          }
+        }
+        
+        /* Tablet: 2 items per row */
+        @media (min-width: 601px) and (max-width: 768px) {
+          .ourwork-gallery {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 16px !important;
+          }
+          .ourwork-item { width: 100% !important; }
+        }
+        
+        @media (max-width: 576px) {
+          .ourwork-section {
+            padding-top: 10px !important;
+            padding-bottom: 80px !important;
+            margin-top: 20px !important;
+          }
+        }
+      `}</style>
     </>
   );
 };

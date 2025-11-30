@@ -1,17 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { FaRocket, FaArrowRight, FaPlay, FaCheckCircle } from 'react-icons/fa';
 import CountUp from './CountUp';
+import earthImage from '../assets/earth.webp';
 
 const Hero = () => {
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setScrollY(window.scrollY);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrollY(window.scrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -27,7 +35,6 @@ const Hero = () => {
       id="home" 
       className="hero-section position-relative overflow-hidden"
       style={{
-        minHeight: '130vh',
         display: 'flex',
         alignItems: 'flex-start',
         position: 'relative',
@@ -37,7 +44,7 @@ const Hero = () => {
       }}
     >
       {/* Premium Background System */}
-      <div className="hero-bg-system position-absolute w-100 h-100" style={{ zIndex: 1 }}>
+      <div className="hero-bg-system position-absolute w-100 h-100" style={{ zIndex: 1, top: 0, left: 0, margin: 0, padding: 0 }}>
         {/* Animated Gradient Overlay */}
         <div className="gradient-overlay" style={{
           position: 'absolute',
@@ -50,17 +57,6 @@ const Hero = () => {
           animation: 'gradientShift 15s ease infinite'
         }}></div>
 
-        {/* Professional Grid Pattern */}
-        <div className="grid-pattern" style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Cdefs%3E%3Cpattern id=\'grid\' width=\'25\' height=\'25\' patternUnits=\'userSpaceOnUse\'%3E%3Cpath d=\'M 25 0 L 0 0 0 25\' fill=\'none\' stroke=\'rgba(102,126,234,0.15)\' stroke-width=\'0.8\'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width=\'100\' height=\'100\' fill=\'url(%23grid)\'/%3E%3C/svg%3E")',
-          opacity: 0.6,
-          transform: `translateY(${scrollY * 0.1}px)`
-        }}></div>
 
         {/* Floating Premium Elements */}
         <div className="floating-elements" style={{
@@ -165,9 +161,9 @@ const Hero = () => {
         </div>
       </div>
 
-      <Container className="position-relative" style={{ zIndex: 2, paddingTop: '130px' }}>
-        <Row className="align-items-start min-vh-100 hero-content-row" style={{ paddingTop: '0px' }}>
-          <Col lg={6} md={12} className="text-white hero-text-col" data-aos="fade-right" data-aos-delay="200">
+      <Container className="position-relative" style={{ zIndex: 2, paddingTop: '130px', paddingBottom: '80px', maxWidth: '1200px' }}>
+        <Row className="align-items-center hero-content-row" style={{ paddingTop: '0px' }}>
+          <Col lg={6} md={12} sm={12} className="text-white hero-text-col order-1 order-lg-1" data-aos="fade-right" data-aos-delay="200">
             {/* Premium Badge */}
             <div className="mb-5" >
               <div className="premium-badge d-inline-block" style={{
@@ -193,7 +189,7 @@ const Hero = () => {
                   animation: 'shimmer 3s infinite'
                 }}></div>
                 <FaRocket className="me-2" style={{ color: '#667eea' }} />
-                <span style={{ position: 'relative', zIndex: 2 }}>Leading Software House</span>
+                <span style={{ position: 'relative', zIndex: 2 }}>Gentrons</span>
               </div>
             </div>
             
@@ -224,8 +220,10 @@ const Hero = () => {
               lineHeight: '1.7',
               color: 'rgba(255,255,255,0.9)',
               fontWeight: '400',
-              maxWidth: '600px',
-              textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+              maxWidth: '550px',
+              textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+              textAlign: 'left',
+              padding: '0 15px'
             }}>
               We deliver cutting-edge software solutions that drive growth, 
               enhance efficiency, and create lasting value for your business. 
@@ -233,7 +231,7 @@ const Hero = () => {
             </p>
             
             {/* Premium CTA Buttons */}
-            <div className="d-flex flex-wrap gap-4 mb-5">
+            <div className="d-flex flex-wrap gap-4 mb-5 justify-content-start">
               <Button 
                 size="lg" 
                 className="fw-bold px-5 py-3 premium-btn-primary"
@@ -307,299 +305,96 @@ const Hero = () => {
             </div>
             
             {/* Premium Stats */}
-            <div className="row text-center premium-stats">
-              <div className="col-4">
-                <div className="premium-stat-item">
-                  <h3 className="fw-bold mb-2 display-5" style={{ 
-                    background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text'
-                  }}>
-                    <CountUp end={500} suffix="+" duration={2500} />
-                  </h3>
-                  <p className="mb-0" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1rem', fontWeight: '500' }}>Projects Delivered</p>
-                </div>
+            <div className="premium-stats" style={{ 
+              display: 'flex', 
+              justifyContent: 'flex-start', 
+              gap: '40px', 
+              marginLeft: '0',
+              flexWrap: 'wrap'
+            }}>
+              <div className="premium-stat-item text-left">
+                <h3 className="fw-bold mb-2 display-5" style={{ 
+                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  textAlign: 'left'
+                }}>
+                  <CountUp end={80} suffix="" duration={2500} />
+                </h3>
+                <p className="mb-0" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1rem', fontWeight: '500', textAlign: 'left' }}>Projects Delivered</p>
               </div>
-              <div className="col-4">
-                <div className="premium-stat-item">
-                  <h3 className="fw-bold mb-2 display-5" style={{ 
-                    background: 'linear-gradient(135deg, #764ba2, #f093fb)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text'
-                  }}>
-                    <CountUp end={98} suffix="%" duration={2000} />
-                  </h3>
-                  <p className="mb-0" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1rem', fontWeight: '500' }}>Client Satisfaction</p>
-                </div>
+              <div className="premium-stat-item text-left">
+                <h3 className="fw-bold mb-2 display-5" style={{ 
+                  background: 'linear-gradient(135deg, #764ba2, #f093fb)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  textAlign: 'left'
+                }}>
+                  <CountUp end={98} suffix="%" duration={2000} />
+                </h3>
+                <p className="mb-0" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1rem', fontWeight: '500', textAlign: 'left' }}>Client Satisfaction</p>
               </div>
-              <div className="col-4">
-                <div className="premium-stat-item">
-                  <h3 className="fw-bold mb-2 display-5" style={{ 
-                    background: 'linear-gradient(135deg, #f093fb, #667eea)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text'
-                  }}>
-                    <CountUp end={50} suffix="+" duration={2200} />
-                  </h3>
-                  <p className="mb-0" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1rem', fontWeight: '500' }}>Team Members</p>
-                </div>
+              <div className="premium-stat-item text-left">
+                <h3 className="fw-bold mb-2 display-5" style={{ 
+                  background: 'linear-gradient(135deg, #f093fb, #667eea)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  textAlign: 'left'
+                }}>
+                  <CountUp end={8} suffix="" duration={2200} />
+                </h3>
+                <p className="mb-0" style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1rem', fontWeight: '500', textAlign: 'left' }}>Team Members</p>
               </div>
             </div>
           </Col>
           
-          <Col lg={6} md={12} className="text-center hero-visual-col" data-aos="fade-left" data-aos-delay="400">
-            <div className="premium-hero-visual position-relative">
-              {/* Main Visual Container */}
-              <div className="premium-visual-container" style={{
-                width: '100%',
-                height: '600px',
-                background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
-                borderRadius: '40px',
-                backdropFilter: 'blur(30px)',
-                border: '2px solid rgba(102, 126, 234, 0.2)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                position: 'relative',
-                overflow: 'hidden',
-                boxShadow: '0 30px 80px rgba(102, 126, 234, 0.2), inset 0 1px 0 rgba(255,255,255,0.1)',
-                transform: `translateY(${scrollY * 0.1}px)`
-              }}>
-                {/* Animated Background Pattern */}
-                <div className="visual-bg-pattern" style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
+          {/* Earth Image on Right Side */}
+          <Col lg={6} md={12} sm={12} className="hero-visual-col order-2 order-lg-2" data-aos="fade-left" data-aos-delay="400">
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'relative',
+              padding: '20px'
+            }}>
+              <img 
+                src={earthImage} 
+                alt="Earth" 
+                loading="eager"
+                fetchPriority="high"
+                decoding="sync"
+                width="600"
+                height="600"
+                style={{
                   width: '100%',
-                  height: '100%',
-                  background: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Cdefs%3E%3Cpattern id=\'grid\' width=\'20\' height=\'20\' patternUnits=\'userSpaceOnUse\'%3E%3Cpath d=\'M 20 0 L 0 0 0 20\' fill=\'none\' stroke=\'rgba(102,126,234,0.2)\' stroke-width=\'0.8\'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width=\'100\' height=\'100\' fill=\'url(%23grid)\'/%3E%3C/svg%3E")',
-                  opacity: 0.6,
-                  animation: 'patternMove 20s linear infinite'
-                }}></div>
-                
-                {/* Floating Elements Inside */}
-                <div className="floating-inner-elements">
-                  <div className="inner-shape shape-1" style={{
-                    position: 'absolute',
-                    top: '15%',
-                    left: '10%',
-                    width: '80px',
-                    height: '80px',
-                    background: 'linear-gradient(45deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3))',
-                    borderRadius: '20px',
-                    animation: 'innerFloat 8s ease-in-out infinite',
-                    filter: 'blur(1px)'
-                  }}></div>
-                  
-                  <div className="inner-shape shape-2" style={{
-                    position: 'absolute',
-                    top: '25%',
-                    right: '15%',
-                    width: '60px',
-                    height: '60px',
-                    background: 'radial-gradient(circle, rgba(240, 147, 251, 0.4), transparent)',
-                    borderRadius: '50%',
-                    animation: 'innerFloat 10s ease-in-out infinite reverse',
-                    filter: 'blur(1px)'
-                  }}></div>
-                  
-                  <div className="inner-shape shape-3" style={{
-                    position: 'absolute',
-                    bottom: '20%',
-                    left: '20%',
-                    width: '100px',
-                    height: '100px',
-                    background: 'conic-gradient(from 0deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2), rgba(240, 147, 251, 0.2))',
-                    borderRadius: '50%',
-                    animation: 'innerFloat 12s ease-in-out infinite',
-                    filter: 'blur(1px)'
-                  }}></div>
-                </div>
-                
-                {/* Main Content */}
-                <div className="premium-visual-content text-center text-white position-relative" style={{ zIndex: 3 }}>
-                  {/* Premium Icon with Enhanced Design */}
-                  <div className="mb-5">
-                    <div className="premium-icon-container" style={{
-                      width: '140px',
-                      height: '140px',
-                      background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 50%, rgba(240, 147, 251, 0.3) 100%)',
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      margin: '0 auto',
-                      border: '4px solid rgba(102, 126, 234, 0.4)',
-                      boxShadow: '0 25px 50px rgba(102, 126, 234, 0.4), inset 0 2px 0 rgba(255,255,255,0.2), 0 0 0 1px rgba(255,255,255,0.1)',
-                      position: 'relative',
-                      overflow: 'hidden'
-                    }}>
-                      {/* Animated Ring */}
-                      <div style={{
-                        position: 'absolute',
-                        top: '-10px',
-                        left: '-10px',
-                        right: '-10px',
-                        bottom: '-10px',
-                        border: '2px solid rgba(102, 126, 234, 0.3)',
-                        borderRadius: '50%',
-                        animation: 'rotate 10s linear infinite'
-                      }}></div>
-                      
-                      {/* Shimmer Effect */}
-                      <div style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        background: 'linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent)',
-                        animation: 'shimmer 3s infinite'
-                      }}></div>
-                      
-                      {/* Inner Glow */}
-                      <div style={{
-                        position: 'absolute',
-                        top: '10px',
-                        left: '10px',
-                        right: '10px',
-                        bottom: '10px',
-                        background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
-                        borderRadius: '50%'
-                      }}></div>
-                      
-                      <FaRocket className="display-3" style={{ 
-                        color: '#667eea',
-                        filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.4))',
-                        position: 'relative',
-                        zIndex: 3,
-                        animation: 'iconFloat 4s ease-in-out infinite'
-                      }} />
-                    </div>
-                  </div>
-                  
-                  {/* Enhanced Heading */}
-                  <h3 className="fw-bold mb-3 innovation-heading" style={{ 
-                    fontSize: '2.8rem',
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                    letterSpacing: '-0.02em',
-                    color: '#667eea',
-                    fontWeight: '900',
-                    textShadow: '0 4px 8px rgba(0,0,0,0.3)'
-                  }}>Innovation at Work</h3>
-                  
-                  {/* Enhanced Description */}
-                  <p className="mb-5" style={{ 
-                    fontSize: '1.3rem',
-                    color: 'rgba(255,255,255,0.95)',
-                    fontWeight: '500',
-                    lineHeight: '1.6',
-                    maxWidth: '400px',
-                    margin: '0 auto',
-                    textShadow: '0 2px 4px rgba(0,0,0,0.2)'
-                  }}>Building the future, one project at a time</p>
-                  
-                  {/* Enhanced Feature Cards */}
-                  <div className="d-flex justify-content-center gap-4 flex-wrap">
-                    <div className="premium-feature-card" style={{
-                      background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.25) 0%, rgba(118, 75, 162, 0.25) 100%)',
-                      backdropFilter: 'blur(25px)',
-                      border: '2px solid rgba(102, 126, 234, 0.4)',
-                      borderRadius: '20px',
-                      padding: '20px 25px',
-                      fontSize: '1rem',
-                      fontWeight: '600',
-                      boxShadow: '0 15px 35px rgba(102, 126, 234, 0.3), inset 0 1px 0 rgba(255,255,255,0.1)',
-                      position: 'relative',
-                      overflow: 'hidden',
-                      transition: 'all 0.3s ease',
-                      minWidth: '180px'
-                    }}>
-                      <div style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        background: 'linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent)',
-                        animation: 'shimmer 4s infinite'
-                      }}></div>
-                      <FaCheckCircle className="me-2" style={{ color: '#667eea', fontSize: '1.1rem' }} />
-                      <span style={{ position: 'relative', zIndex: 2 }}>Custom Solutions</span>
-                    </div>
-                    
-                    <div className="premium-feature-card" style={{
-                      background: 'linear-gradient(135deg, rgba(118, 75, 162, 0.25) 0%, rgba(240, 147, 251, 0.25) 100%)',
-                      backdropFilter: 'blur(25px)',
-                      border: '2px solid rgba(118, 75, 162, 0.4)',
-                      borderRadius: '20px',
-                      padding: '20px 25px',
-                      fontSize: '1rem',
-                      fontWeight: '600',
-                      boxShadow: '0 15px 35px rgba(118, 75, 162, 0.3), inset 0 1px 0 rgba(255,255,255,0.1)',
-                      position: 'relative',
-                      overflow: 'hidden',
-                      transition: 'all 0.3s ease',
-                      minWidth: '180px'
-                    }}>
-                      <div style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        background: 'linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent)',
-                        animation: 'shimmer 4s infinite'
-                      }}></div>
-                      <FaCheckCircle className="me-2" style={{ color: '#764ba2', fontSize: '1.1rem' }} />
-                      <span style={{ position: 'relative', zIndex: 2 }}>24/7 Support</span>
-                    </div>
-                  </div>
-                  
-                  {/* Additional Feature */}
-                  <div className="mt-4">
-                    <div className="premium-feature-card" style={{
-                      background: 'linear-gradient(135deg, rgba(240, 147, 251, 0.25) 0%, rgba(102, 126, 234, 0.25) 100%)',
-                      backdropFilter: 'blur(25px)',
-                      border: '2px solid rgba(240, 147, 251, 0.4)',
-                      borderRadius: '20px',
-                      padding: '20px 25px',
-                      fontSize: '1rem',
-                      fontWeight: '600',
-                      boxShadow: '0 15px 35px rgba(240, 147, 251, 0.3), inset 0 1px 0 rgba(255,255,255,0.1)',
-                      position: 'relative',
-                      overflow: 'hidden',
-                      transition: 'all 0.3s ease',
-                      display: 'inline-block'
-                    }}>
-                      <div style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        background: 'linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent)',
-                        animation: 'shimmer 4s infinite'
-                      }}></div>
-                      <FaCheckCircle className="me-2" style={{ color: '#f093fb', fontSize: '1.1rem' }} />
-                      <span style={{ position: 'relative', zIndex: 2 }}>Latest Technologies</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  maxWidth: '600px',
+                  height: 'auto',
+                  objectFit: 'contain',
+                  filter: 'drop-shadow(0 20px 60px rgba(102, 126, 234, 0.3))',
+                  animation: 'float 6s ease-in-out infinite',
+                  transition: 'all 0.5s ease'
+                }}
+                className="hero-earth-image"
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'scale(1.05)';
+                  e.target.style.filter = 'drop-shadow(0 25px 80px rgba(102, 126, 234, 0.5))';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'scale(1)';
+                  e.target.style.filter = 'drop-shadow(0 20px 60px rgba(102, 126, 234, 0.3))';
+                }}
+              />
             </div>
           </Col>
+          
         </Row>
       </Container>
 
 
-      <style jsx>{`
+      <style>{`
         @keyframes float {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
           50% { transform: translateY(-30px) rotate(5deg); }
@@ -661,6 +456,19 @@ const Hero = () => {
           100% { left: 100%; }
         }
         
+        /* Container Width Reduction */
+        @media (min-width: 1200px) {
+          .container {
+            max-width: 1140px !important;
+          }
+        }
+        
+        @media (min-width: 992px) and (max-width: 1199px) {
+          .container {
+            max-width: 960px !important;
+          }
+        }
+        
         .hero-section {
           background-attachment: fixed;
           margin: 0 !important;
@@ -716,7 +524,6 @@ const Hero = () => {
         @media (max-width: 768px) {
           .hero-section {
             background-attachment: scroll;
-            min-height: 100vh;
             padding-bottom: 100px;
           }
           
@@ -732,12 +539,11 @@ const Hero = () => {
         
         @media (max-width: 375px) {
           .hero-section {
-            min-height: 100vh;
             padding-bottom: 120px;
           }
           
           .premium-visual-container {
-            height: 500px !important;
+            /* Dynamic height */
           }
           
           .premium-icon-container {
@@ -755,14 +561,59 @@ const Hero = () => {
       }
       
       /* Hero Section Mobile Responsiveness */
+      @media (max-width: 992px) {
+        .container {
+          padding-left: 20px !important;
+          padding-right: 20px !important;
+        }
+      }
+      
       @media (max-width: 768px) {
         .hero-section {
-          min-height: 110vh !important;
-          padding: 100px 0 0 0 !important;
+          padding: 0 0 0 0 !important;
+          margin-top: 0 !important;
+          margin: 0 !important;
+        }
+        
+        .premium-stats {
+          display: flex !important;
+          flex-direction: row !important;
+          justify-content: space-around !important;
+          gap: 20px !important;
+          flex-wrap: wrap !important;
+          margin-top: 30px !important;
+        }
+        
+        .premium-stat-item {
+          flex: 1 !important;
+          min-width: 100px !important;
+          text-align: center !important;
+        }
+        
+        .premium-stat-item h3 {
+          font-size: 2rem !important;
+          text-align: center !important;
+        }
+        
+        .premium-stat-item p {
+          font-size: 0.9rem !important;
+          text-align: center !important;
+        }
+        
+        .hero-bg-system {
+          top: 0 !important;
+          left: 0 !important;
+          margin: 0 !important;
+          padding: 0 !important;
         }
         
         .container {
-          padding: 0 20px !important;
+          padding-left: 15px !important;
+          padding-right: 15px !important;
+        }
+        
+        .hero-section .position-relative {
+          padding-top: 60px !important;
         }
         
         .hero-content-row {
@@ -771,16 +622,16 @@ const Hero = () => {
         }
         
         .hero-text-col {
-          order: 2 !important;
-          padding: 0 10px !important;
-          margin-bottom: 30px !important;
+          order: 1 !important;
+          padding: 0 5px !important;
+          margin-bottom: 20px !important;
           text-align: center !important;
         }
         
         .hero-visual-col {
-          order: 1 !important;
-          padding: 0 10px !important;
-          margin-bottom: 20px !important;
+          order: 2 !important;
+          padding: 0 5px !important;
+          margin-bottom: 15px !important;
         }
         
         /* Premium Badge Mobile */
@@ -793,12 +644,12 @@ const Hero = () => {
         
         /* Leading Software House Spacing Mobile */
         .hero-text-col .mb-5 {
-          margin-top: 20px !important;
+          margin-top: 80px !important;
         }
         
         /* Heading Mobile */
         .display-2 {
-          font-size: 2.2rem !important;
+          font-size: 1.8rem !important;
           line-height: 1.2 !important;
           margin-bottom: 20px !important;
           word-wrap: break-word !important;
@@ -816,20 +667,29 @@ const Hero = () => {
           max-width: 100% !important;
         }
         
+        /* Mobile fw-bold mb-4 Elements */
+        .fw-bold.mb-4 {
+          margin-bottom: 24px !important;
+        }
+        
         /* CTA Buttons Mobile */
         .d-flex.flex-wrap.gap-4 {
-          flex-direction: column !important;
-          gap: 15px !important;
+          flex-direction: row !important;
+          gap: 12px !important;
           margin-bottom: 30px !important;
           align-items: center !important;
+          justify-content: center !important;
+          flex-wrap: wrap !important;
         }
         
         .premium-btn-primary,
         .premium-btn-secondary {
-          width: 100% !important;
-          max-width: 280px !important;
-          padding: 12px 20px !important;
-          font-size: 1rem !important;
+          width: auto !important;
+          flex: 1 1 auto !important;
+          min-width: 140px !important;
+          max-width: 48% !important;
+          padding: 12px 16px !important;
+          font-size: 0.95rem !important;
           border-radius: 12px !important;
         }
         
@@ -856,7 +716,6 @@ const Hero = () => {
         
         /* Visual Container Mobile */
         .premium-visual-container {
-          height: 300px !important;
           border-radius: 20px !important;
           margin: 0 auto !important;
           max-width: 400px !important;
@@ -955,12 +814,12 @@ const Hero = () => {
       
       @media (max-width: 576px) {
         .hero-section {
-          min-height: 110vh !important;
           padding: 90px 0 0 0 !important;
         }
         
         .container {
-          padding: 0 15px !important;
+          padding-left: 12px !important;
+          padding-right: 12px !important;
         }
         
         .hero-text-col {
@@ -987,7 +846,7 @@ const Hero = () => {
         
         /* Heading Small Mobile */
         .display-2 {
-          font-size: 1.9rem !important;
+          font-size: 1.6rem !important;
           line-height: 1.2 !important;
           margin-bottom: 18px !important;
           word-wrap: break-word !important;
@@ -1004,15 +863,21 @@ const Hero = () => {
         
         /* CTA Buttons Small Mobile */
         .d-flex.flex-wrap.gap-4 {
-          gap: 12px !important;
+          flex-direction: row !important;
+          gap: 10px !important;
           margin-bottom: 25px !important;
+          justify-content: center !important;
+          flex-wrap: wrap !important;
         }
         
         .premium-btn-primary,
         .premium-btn-secondary {
-          max-width: 260px !important;
-          padding: 10px 18px !important;
-          font-size: 0.95rem !important;
+          width: auto !important;
+          flex: 1 1 auto !important;
+          min-width: 130px !important;
+          max-width: 48% !important;
+          padding: 10px 14px !important;
+          font-size: 0.9rem !important;
           border-radius: 10px !important;
         }
         
@@ -1039,7 +904,6 @@ const Hero = () => {
         
         /* Visual Container Small Mobile */
         .premium-visual-container {
-          height: 250px !important;
           border-radius: 18px !important;
           max-width: 350px !important;
         }
@@ -1124,12 +988,12 @@ const Hero = () => {
       
       @media (max-width: 480px) {
         .hero-section {
-          min-height: 110vh !important;
-          padding: 80px 0 0 0 !important;
+          padding: 80px 0 80px 0 !important;
         }
         
         .container {
-          padding: 0 12px !important;
+          padding-left: 10px !important;
+          padding-right: 10px !important;
         }
         
         .hero-text-col {
@@ -1156,7 +1020,7 @@ const Hero = () => {
         
         /* Heading Ultra Small */
         .display-2 {
-          font-size: 1.6rem !important;
+          font-size: 1.4rem !important;
           line-height: 1.2 !important;
           margin-bottom: 15px !important;
           word-wrap: break-word !important;
@@ -1173,14 +1037,20 @@ const Hero = () => {
         
         /* CTA Buttons Ultra Small */
         .d-flex.flex-wrap.gap-4 {
-          gap: 10px !important;
+          flex-direction: row !important;
+          gap: 8px !important;
           margin-bottom: 20px !important;
+          justify-content: center !important;
+          flex-wrap: wrap !important;
         }
         
         .premium-btn-primary,
         .premium-btn-secondary {
-          max-width: 240px !important;
-          padding: 8px 15px !important;
+          width: auto !important;
+          flex: 1 1 auto !important;
+          min-width: 120px !important;
+          max-width: 48% !important;
+          padding: 8px 12px !important;
           font-size: 0.85rem !important;
           border-radius: 8px !important;
         }
@@ -1208,7 +1078,6 @@ const Hero = () => {
         
         /* Visual Container Ultra Small */
         .premium-visual-container {
-          height: 200px !important;
           border-radius: 15px !important;
           max-width: 300px !important;
         }
@@ -1294,7 +1163,6 @@ const Hero = () => {
       /* Extra Small Mobile - Ultra Responsive */
       @media (max-width: 360px) {
         .hero-section {
-          min-height: 110vh !important;
           padding: 70px 0 0 0 !important;
         }
         
